@@ -1,19 +1,20 @@
 (ns webcli.views.welcome
   (:require [webcli.views.common :as common]
             [noir.content.getting-started])
-  (:use [noir.core :only [defpage]]
-        [hiccup.core :only [html]]
+  (:use [noir.core
+         ;:only [defpage]
+         ]
+        [hiccup.core
+         ;:only [html]
+         ]
         [hiccup.page-helpers]
+        [hiccup.form-helpers]
         ))
 
 (comment  ; use these commands on repl
 (load "../webcli/views/welcome")
 (in-ns 'webcli.views.welcome)
 ); comment
-
-(defpage "/welcome" []
-         (common/layout
-           [:p "Welcome to webcli"]))
 
 (import '(java.io BufferedReader InputStreamReader)) 
 
@@ -40,20 +41,59 @@
     (line-seq buff-reader))
   )
 
-(defpage "/my-page" []
+(defpage "/webcli" []
   (html
+    [:head
+     [:title "web command line interface"]]
+    (include-js "/CodeMirror-2.23/lib/codemirror.js")
+    (include-css "/CodeMirror-2.23/lib/codemirror.css")
+    (include-css "/CodeMirror-2.23/theme/lesser-dark.css")
+    (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
     ;(include-css "/css/embed.css")
     (include-css "/css/noir.css")
-    (include-css "/css/gist.css")
+    ;(include-css "/css/gist.css")
     ;(include-css "https://gist.github.com/stylesheets/gist/embed.css")
     ;(include-css "/css/reset.css")
-    ;[:h1 "This is my first page!"]
-    ;[:h1 (str "cmd: " (cmd "ls -la"))]
-    [:pre
-     [:div 
-      {:class "gist gist-data gist-syntax" } 
-      (map #(html [:div %]) (cmd "ls -la"))]
+    ;; following line together with '(include-css "/css/noir.css")' makes the inner frame
+    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: 100% }" ]
+    [:body
+     [:form
+      [:textarea {:id "code"}
+       (map #(str % "\n") (cmd "ls -la"))
+       ;"function getCompletions(token, context) {}"
+       ]
+      ]
+     [:script
+      "
+      var editor = CodeMirror.fromTextArea(document.getElementById(\"code\"), {
+      lineNumbers: true,
+      extraKeys: {\"Ctrl-Space\": function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}
+      });
+      editor.setOption(\"theme\", \"lesser-dark\");
+      //editor.setOption(\"theme\", \"default\");   // this theme does not work properly
+      "
+      ]
      ]
-    ))
+    )
+  )
 
+(comment
+(defpartial layout [& content]
+  (html5
+    [:head
+     [:title "Forms"]]
+    [:body
+     content]))
 
+(defpartial user-fields [{:keys [firstname lastname]}]
+  (label "firstname" "First name: ")
+  (text-field "firstname" firstname)
+  (label "lastname" "Last name: ")
+  (text-field "lastname" lastname))
+
+(defpage "/user/add" {:as user}
+  (layout
+    (form-to [:post "/user/add"]
+            (user-fields user)
+            (submit-button "Add user"))))
+);comment
