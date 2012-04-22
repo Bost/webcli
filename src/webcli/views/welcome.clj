@@ -95,10 +95,12 @@
 (defn getstr [cmd-str-nr]
   (str (get cmd-str-nr :cmd-str)))
 
-(defn valid? [{:keys [ cmd-str ]}]
-  (vali/rule (vali/min-length? cmd-str 1)
-             [:cmd-str "Your command " (getstr cmd-str) " must have at least 1 letter."])
-  (not (vali/errors? :cmd-str))
+(defn valid? [{:keys [ cmd-str cmd-nr]}]
+  ;(vali/rule (vali/has-value? cmd-str)
+  ;           [:cmd-str "The command is empty."])
+  (vali/rule (vali/has-value? cmd-nr)
+             [:cmd-nr "The command nr is empty."])
+  (not (vali/errors? :cmd-str :cmd-nr))
   )
 
 (defpage [:post "/webcli"] {:as cmd-str-nr}
