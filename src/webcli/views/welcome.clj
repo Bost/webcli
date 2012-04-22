@@ -48,7 +48,7 @@
   )
 
 ; initial value must be 1
-(def *cmd-nr* (atom 1))
+(def glob-cmd-nr (atom 1))
 
 ; TODO use stucture like this (with html5)
 (defpartial layout [ cmd-nr & content]
@@ -78,16 +78,15 @@
   (label "cmd-str" "Command: ")
   (text-field "cmd-str" "ls -la")
   (label "cmd-nr" "cmd-nr: ")
-  (text-field "cmd-nr" @*cmd-nr*) ;@*cmd-nr* is the same as (deref *cmd-nr*)
+  (text-field "cmd-nr" @glob-cmd-nr) ;@glob-cmd-nr is the same as (deref glob-cmd-nr)
   )
 
 (defn getnr [cmd-str-nr]
-  (let [
-        cmd-nr (get cmd-str-nr :cmd-nr)
-        ]
+  (let [ cmd-nr (get cmd-str-nr :cmd-nr) ]
+    (println "getnr: " cmd-str-nr "; cmd-nr: " cmd-nr)
     (if (nil? cmd-nr)
-      (str @*cmd-nr*)
-      cmd-nr
+      (str @glob-cmd-nr)
+      (str cmd-nr)
       )
     )
   )
@@ -135,7 +134,7 @@
                               (map #(str % "\n") (cmd cmd-str)) ; this creates a list of strings
                               ))
              ]
-         (swap! *cmd-nr* inc)
+         (swap! glob-cmd-nr inc)
          ;@(get (get @session :cmd-0) :curr)
          ; add new item to the session
          ;(conj s @c (hash-set :orig "" :curr (atom "")))
