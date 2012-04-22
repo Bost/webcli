@@ -82,11 +82,14 @@
   )
 
 (defn getnr [cmd-str-nr]
-  (let [ cmd-nr (get cmd-str-nr :cmd-nr) ]
-    (println "getnr: " cmd-str-nr "; cmd-nr: " cmd-nr)
-    (if (nil? cmd-nr)
-      (read-string (str @glob-cmd-nr)) ; TODO this should happen only when the page is first time openedyy
-      (read-string (str cmd-nr))
+  (let [ prm-cmd-nr (get cmd-str-nr :cmd-nr) ]
+    ;(println "getnr: " cmd-str-nr "; prm-cmd-nr: " prm-cmd-nr)
+    (let [ ret-nr (if (nil? prm-cmd-nr)
+                    @glob-cmd-nr ; TODO this should happen only when the page is first time openedyy
+                    prm-cmd-nr   ; this needs to be converted to a number
+                    )
+          ]
+      (read-string (str ret-nr))
       )
     )
   )
