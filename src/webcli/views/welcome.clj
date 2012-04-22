@@ -66,7 +66,7 @@
     ;(include-css "https://gist.github.com/stylesheets/gist/embed.css")
     ;(include-css "/css/reset.css")
     ;; following line together with '(include-css "/css/noir.css")' makes the inner frame
-    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: " (/ 100 (read-string cmd-nr)) " % }" ]
+    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: " (/ 100 cmd-nr) " % }" ]
     [:body
      content]))
 
@@ -85,8 +85,8 @@
   (let [ cmd-nr (get cmd-str-nr :cmd-nr) ]
     (println "getnr: " cmd-str-nr "; cmd-nr: " cmd-nr)
     (if (nil? cmd-nr)
-      (str @glob-cmd-nr)
-      (str cmd-nr)
+      (read-string (str @glob-cmd-nr)) ; TODO this should happen only when the page is first time openedyy
+      (read-string (str cmd-nr))
       )
     )
   )
@@ -120,13 +120,10 @@
 (def my-session #{}) ; session is sorted set
 ;(def session (sorted-set :cmd-0 (hash-set :orig "" :curr (atom ""))))
 
-(defpage "/webcli" {:as cmd-str-nr }
- (let [
-       cmd-nr  (getnr  cmd-str-nr)
-       ]
-   (layout cmd-nr
-     [:form
-      [:textarea#code     ; #code makes the same as {:id "code"}
+(defpartial textarea [id cmd-str-nr]
+  ;(println "textarea: id: " id)
+  [:span
+      [:textarea {:id id}
        (let [
              cmd-str (getstr cmd-str-nr)
              result (concat (list (str "$ " cmd-str "\n"))
@@ -144,17 +141,28 @@
          (doall result)
          )
        ]
-      ]
      ;[:div {:onclick "alert(onclick)"} "undo"]
      [:script
       "
-      var editor = CodeMirror.fromTextArea(document.getElementById(\"code\"), {
+      var editor = CodeMirror.fromTextArea(document.getElementById(\"" id "\"), {
       lineNumbers: true,
       extraKeys: {\"Ctrl-Space\": function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}
       });
       editor.setOption(\"theme\", \"lesser-dark\");
       //editor.setOption(\"theme\", \"default\");   // this theme does not work properly
       "
+      ]
+   ]
+)
+
+(defpage "/webcli" {:as cmd-str-nr }
+ (let [
+       cmd-nr  (getnr  cmd-str-nr)
+       ]
+   (layout cmd-nr
+     [:form
+      ;(println "read-string cmd-nr: " (read-string cmd-nr))
+      (map #(textarea (str "code-" %) cmd-str-nr) (vec (range cmd-nr)))
       ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
