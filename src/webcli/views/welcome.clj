@@ -39,7 +39,7 @@
 
 
 (defn cmd [str-cmd]
-  (println str-cmd)
+  ;(println (str "cmd: " str-cmd))
   (let [
         java-lang-process (exec-cmd str-cmd)
         buff-reader (get-buff-reader java-lang-process)
@@ -69,28 +69,43 @@
 (defpartial error-item [[first-error]]
   [:p.error first-error])
 
-(defpartial command-fields [{:keys [ command ]}]
+(defpartial command-fields [{:keys [ str-cmd ]}]
   (vali/on-error :command error-item)
   (label "command" "Command: ")
-  (text-field "command" command)
+  ;(text-field "command" str-cmd)
+  (text-field "command" "ls -la")
   )
 
 (defn valid? [{:keys [ command ]}]
   (vali/rule (vali/min-length? command 1)
-             [:command "Your command must have at least 1 letter."])
+             [:command "Your command " (getstr command) " must have at least 1 letter."])
   (not (vali/errors? :command))
   )
+(defn getstr [command]
+  (str (get command :command)))
+
+(defpage [:post "/webcli"] {:as command}
+ (if (valid? command)
+   (layout
+     ;(println (str "Showing: " (getstr command) "\n"))
+     [:p (str "Command: " (getstr command) " is valid") ]
+     )
+   )
+ (render "/webcli" command)
+ )
 
 (defpage "/webcli" {:as command}
  (layout
    [:form
     [:textarea#code     ; #code makes the same as {:id "code"}
-     ;(map #(str % "\n") (cmd "ls -la"))
-     (if (valid? command)
-       (
-        (println (str "Showing: " ((get command :command) "\n")))
-        (str (get command :command) "\n" (map #(str "# " % "\n") (cmd (str (get command :command)))))
-        )
+     (let [
+           strcmd (getstr command)
+           ]
+       (concat (list (str "$ " strcmd "\n"))
+               (if (valid? command)
+                 (map #(str % "\n") (cmd strcmd)) ; this creates a list of strings
+                 )
+               )
        )
      ]
     ]
@@ -107,7 +122,6 @@
    (form-to [:post "/webcli"]
             (command-fields command)
             (submit-button "Execute command"))
-
    )
  )
 
