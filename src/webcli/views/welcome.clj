@@ -1,6 +1,10 @@
 (ns webcli.views.welcome
-  (:require [webcli.views.common :as common]
-            [noir.content.getting-started])
+  (:require
+            [webcli.views.common :as common]
+            [noir.content.getting-started]
+            [noir.validation :as vali]
+            [noir.response :as resp]
+    )
   (:use [noir.core
          ;:only [defpage]
          ]
@@ -9,7 +13,8 @@
          ]
         [hiccup.page-helpers]
         [hiccup.form-helpers]
-        ))
+        )
+  )
 
 (comment  ; use these commands on repl
 (load "../webcli/views/welcome")
@@ -34,6 +39,7 @@
 
 
 (defn cmd [str-cmd]
+  (println str-cmd)
   (let [
         java-lang-process (exec-cmd str-cmd)
         buff-reader (get-buff-reader java-lang-process)
@@ -41,7 +47,30 @@
     (line-seq buff-reader))
   )
 
-(defpage "/webcli" []
+; TODO use stucture like this (with html5)
+(defpartial layout [& content]
+  (html5
+    [:head
+     [:title "Forms"]]
+    [:body
+     content]))
+
+(defpartial error-item [[first-error]]
+  [:p.error first-error])
+
+(defpartial command-fields [{:keys [ command ]}]
+  (vali/on-error :command error-item)
+  (label "command" "Command: ")
+  (text-field "command" command)
+  )
+
+(defn valid? [{:keys [ command ]}]
+  (vali/rule (vali/min-length? command 1)
+             [:command "Your command must have at least 1 letter."])
+  (not (vali/errors? :command))
+  )
+
+(defpage "/webcli" {:as command}
   (html
     [:head
      [:title "web command line interface"]]
@@ -55,12 +84,14 @@
     ;(include-css "https://gist.github.com/stylesheets/gist/embed.css")
     ;(include-css "/css/reset.css")
     ;; following line together with '(include-css "/css/noir.css")' makes the inner frame
-    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: 100% }" ]
+    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: 98% }" ]
     [:body
      [:form
       [:textarea {:id "code"}
-       (map #(str % "\n") (cmd "ls -la"))
-       ;"function getCompletions(token, context) {}"
+       ;(map #(str % "\n") (cmd "ls -la"))
+        (if (valid? command)
+          (map #(str % "\n") (cmd (str (get command :command))))
+          )
        ]
       ]
      [:script
@@ -73,27 +104,12 @@
       //editor.setOption(\"theme\", \"default\");   // this theme does not work properly
       "
       ]
+
+    (form-to [:post "/webcli"]
+            (command-fields command)
+            (submit-button "Execute command"))
+
      ]
     )
   )
 
-(comment
-(defpartial layout [& content]
-  (html5
-    [:head
-     [:title "Forms"]]
-    [:body
-     content]))
-
-(defpartial user-fields [{:keys [firstname lastname]}]
-  (label "firstname" "First name: ")
-  (text-field "firstname" firstname)
-  (label "lastname" "Last name: ")
-  (text-field "lastname" lastname))
-
-(defpage "/user/add" {:as user}
-  (layout
-    (form-to [:post "/user/add"]
-            (user-fields user)
-            (submit-button "Add user"))))
-);comment
