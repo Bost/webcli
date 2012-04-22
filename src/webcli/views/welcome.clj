@@ -49,9 +49,20 @@
 
 ; TODO use stucture like this (with html5)
 (defpartial layout [& content]
-  (html5
+  (html
     [:head
-     [:title "Forms"]]
+     [:title "web command line interface"]]
+    (include-js "/CodeMirror-2.23/lib/codemirror.js")
+    (include-css "/CodeMirror-2.23/lib/codemirror.css")
+    (include-css "/CodeMirror-2.23/theme/lesser-dark.css")
+    (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
+    ;(include-css "/css/embed.css")
+    (include-css "/css/noir.css")
+    ;(include-css "/css/gist.css")
+    ;(include-css "https://gist.github.com/stylesheets/gist/embed.css")
+    ;(include-css "/css/reset.css")
+    ;; following line together with '(include-css "/css/noir.css")' makes the inner frame
+    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: 98% }" ]
     [:body
      content]))
 
@@ -71,45 +82,32 @@
   )
 
 (defpage "/webcli" {:as command}
-  (html
-    [:head
-     [:title "web command line interface"]]
-    (include-js "/CodeMirror-2.23/lib/codemirror.js")
-    (include-css "/CodeMirror-2.23/lib/codemirror.css")
-    (include-css "/CodeMirror-2.23/theme/lesser-dark.css")
-    (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
-    ;(include-css "/css/embed.css")
-    (include-css "/css/noir.css")
-    ;(include-css "/css/gist.css")
-    ;(include-css "https://gist.github.com/stylesheets/gist/embed.css")
-    ;(include-css "/css/reset.css")
-    ;; following line together with '(include-css "/css/noir.css")' makes the inner frame
-    [:style {:type "text/css"} ".CodeMirror {border: 1px solid #eee; } .CodeMirror-scroll { height: 98% }" ]
-    [:body
-     [:form
-      [:textarea {:id "code"}
-       ;(map #(str % "\n") (cmd "ls -la"))
-        (if (valid? command)
-          (map #(str % "\n") (cmd (str (get command :command))))
-          )
-       ]
-      ]
-     [:script
-      "
-      var editor = CodeMirror.fromTextArea(document.getElementById(\"code\"), {
-      lineNumbers: true,
-      extraKeys: {\"Ctrl-Space\": function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}
-      });
-      editor.setOption(\"theme\", \"lesser-dark\");
-      //editor.setOption(\"theme\", \"default\");   // this theme does not work properly
-      "
-      ]
-
-    (form-to [:post "/webcli"]
+ (layout
+   [:form
+    [:textarea#code     ; #code makes the same as {:id "code"}
+     ;(map #(str % "\n") (cmd "ls -la"))
+     (if (valid? command)
+       (
+        (println (str "Showing: " ((get command :command) "\n")))
+        (str (get command :command) "\n" (map #(str "# " % "\n") (cmd (str (get command :command)))))
+        )
+       )
+     ]
+    ]
+   [:script
+    "
+    var editor = CodeMirror.fromTextArea(document.getElementById(\"code\"), {
+    lineNumbers: true,
+    extraKeys: {\"Ctrl-Space\": function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}
+    });
+    editor.setOption(\"theme\", \"lesser-dark\");
+    //editor.setOption(\"theme\", \"default\");   // this theme does not work properly
+    "
+    ]
+   (form-to [:post "/webcli"]
             (command-fields command)
             (submit-button "Execute command"))
 
-     ]
-    )
-  )
+   )
+ )
 
