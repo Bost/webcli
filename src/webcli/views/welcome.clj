@@ -105,23 +105,19 @@
   (not (vali/errors? :cmd-str :cmd-nr))
   )
 
-(defpage [:post "/webcli"] {:as cmd-str-nr}
- (let [
-       cmd-nr  (getnr  cmd-str-nr)
-       ]
-   (if (valid? cmd-str-nr)
-     (layout cmd-nr
-             ;(println (str "Showing: " (getstr cmd-str-nr) "\n"))
-             [:p (str "Command: " (getstr cmd-str-nr) " is valid") ]
-             )
-     )
-   (render "/webcli" cmd-str-nr)
-   )
- )
+; my-session must be a vector: the order of commands cannot be changed over time, the command can repeat several times
+(def my-session (atom []))
 
-;(def s (hash-map :cmd-0 (hash-map :orig "orr-0" :curr "curr-0")))
-(def my-session #{}) ; session is sorted set
-;(def session (sorted-set :cmd-0 (hash-set :orig "" :curr (atom ""))))
+(defpage [:post "/webcli"] {:as cmd-str-nr}
+ (if (valid? cmd-str-nr)
+   (let [
+         cmd-str (getstr cmd-str-nr)
+         ]
+     (swap! my-session conj cmd-str)  ; add new command to the list
+     )
+   )
+         (render "/webcli" cmd-str-nr)
+)
 
 (defpartial textarea [id cmd-str-nr]
   ;(println "textarea: id: " id)
