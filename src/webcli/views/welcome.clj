@@ -73,9 +73,12 @@
 (defpartial error-item [[first-error]]
   [:p.error first-error])
 
+;uname -n   print the network node hostname
+(def prompt (str (read-string (first (cmd "uname -n"))) "$ ") )
+
 (defpartial command-fields [{:keys [ cmd-str cmd-nr]}]
   (vali/on-error :cmd-str error-item)
-  (label "cmd-str" "Command: ")
+  (label "cmd-str" prompt)
   ;(text-field "cmd-str" "ls -la")
   (text-field "cmd-str" "pwd")
   (label "cmd-nr" "cmd-nr: ")
@@ -113,7 +116,7 @@
  (if (valid? cmd-str-nr)
    (let [
          cmd-str (getstr cmd-str-nr)
-         result (concat (list (str "$ " cmd-str "\n"))
+         result (concat (list (str prompt cmd-str "\n"))
                         (if (valid? cmd-str-nr)
                           (map #(str % "\n") (cmd cmd-str)) ; this creates a list of strings
                           ))
