@@ -4,7 +4,7 @@
             [noir.content.getting-started]
             [noir.validation :as vali]
             [noir.response :as resp]
-            [noir.session :as session]
+            ;[noir.session :as session]
     )
   (:use [noir.core
          ;:only [defpage]
@@ -52,7 +52,7 @@
 
 ; TODO use stucture like this (with html5)
 (defpartial layout [ cmd-nr & content]
-  (println "layout: cmd-nr" cmd-nr)
+  ;(println "layout: cmd-nr" cmd-nr)
   (html
     [:head
      [:title "web command line interface"]]
@@ -76,7 +76,8 @@
 (defpartial command-fields [{:keys [ cmd-str cmd-nr]}]
   (vali/on-error :cmd-str error-item)
   (label "cmd-str" "Command: ")
-  (text-field "cmd-str" "ls -la")
+  ;(text-field "cmd-str" "ls -la")
+  (text-field "cmd-str" "pwd")
   (label "cmd-nr" "cmd-nr: ")
   (text-field "cmd-nr" @glob-cmd-nr) ;@glob-cmd-nr is the same as (deref glob-cmd-nr)
   )
@@ -105,40 +106,36 @@
   (not (vali/errors? :cmd-str :cmd-nr))
   )
 
-; my-session must be a vector: the order of commands cannot be changed over time, the command can repeat several times
-(def my-session (atom []))
+; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times
+(def session (atom []))
 
 (defpage [:post "/webcli"] {:as cmd-str-nr}
  (if (valid? cmd-str-nr)
    (let [
          cmd-str (getstr cmd-str-nr)
+         result (concat (list (str "$ " cmd-str "\n"))
+                        (if (valid? cmd-str-nr)
+                          (map #(str % "\n") (cmd cmd-str)) ; this creates a list of strings
+                          ))
          ]
-     (swap! my-session conj cmd-str)  ; add new command to the list
+     (swap! session conj result)  ; add new command to the list
      )
    )
-         (render "/webcli" cmd-str-nr)
+  (render "/webcli" cmd-str-nr)
 )
 
-(defpartial textarea [id cmd-str-nr]
+(defn show-session []
+  (for [c @session] (print (first c))))
+
+(defpartial textarea [id result]
   ;(println "textarea: id: " id)
+  ;(println "textarea: result: " result)
+  ;(println "textarea: ------------")
   [:span
       [:textarea {:id id}
-       (let [
-             cmd-str (getstr cmd-str-nr)
-             result (concat (list (str "$ " cmd-str "\n"))
-                            (if (valid? cmd-str-nr)
-                              (map #(str % "\n") (cmd cmd-str)) ; this creates a list of strings
-                              ))
-             ]
-         (swap! glob-cmd-nr inc)
-         ;@(get (get @session :cmd-0) :curr)
-         ; add new item to the session
-         ;(conj s @c (hash-set :orig "" :curr (atom "")))
-         ;(conj my-session @*counter* (hash-set :orig "" :curr (atom "")))
-
-         ;(reset! session :cmd-0 (hash-set :orig result :curr (atom result)))
-         (doall result)
-         )
+         (if-not (nil? result)
+           (doall result)
+           )
        ]
      ;[:div {:onclick "alert(onclick)"} "undo"]
      [:script
@@ -160,8 +157,7 @@
        ]
    (layout cmd-nr
      [:form
-      ;(println "read-string cmd-nr: " (read-string cmd-nr))
-      (map #(textarea (str "code-" %) cmd-str-nr) (vec (range cmd-nr)))
+      (map-indexed #(textarea (str "code-" (inc %1)) %2) @session)
       ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
