@@ -3,8 +3,9 @@
 pom.xml
 *jar
 /lib/
-/target/classes/
+/classes/
 .lein-deps-sum
+resources/public/cljs/
 
 #/bin
 #/lib

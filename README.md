@@ -1,6 +1,6 @@
 # webcli
 
-A website written in noir. 
+A website written with Noir and ClojureScript.
 
 ## Usage
 
@@ -11,7 +11,7 @@ lein run
 
 ## License
 
-Copyright (C) 2011 FIXME
+Copyright (C) 2012 FIXME
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
