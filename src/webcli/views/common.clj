@@ -24,6 +24,8 @@
     (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
 
     (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
+    (include-js "/js/app.js")
+    (include-js "/js/ui_demos.js")
     (include-js "/js/jquery-1.7.2.min.js")
     (include-js "/js/jquery-ui-1.8.19.custom.min.js")
     [:style {:type "text/css"}
@@ -70,14 +72,50 @@
   )
 
 (defpartial textarea [id result]
-  ;(println "textarea: id: " id)
-  ;(println "textarea: result: " result)
-  ;(println "textarea: ------------")
+(comment
+[:div {:id "accordion" :class "ui-accordion ui-widget ui-helper-reset ui-accordion-icons" :role "tablist" }
+  [:h3 {:class "ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" :role "tab" :aria-expanded "false" :aria-selected "false" :tabindex "-1"}
+    [:span {:class "ui-icon ui-icon-triangle-1-e"} ]
+    [:a {:href "#" } "Section 1" ]
+   ]
+[:div {:class "ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" :style "display: none; height: 122px; " :role "tabpanel" }
+	[:p "Mauris mauris ante, blandit et" ]
+]
+[:h3 {:class "ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" :role "tab" :aria-expanded "true" :aria-selected "true" :tabindex "0"}
+ [:span {:class "ui-icon ui-icon-triangle-1-s"} ]
+ [:a {:href "#" } "Section 2"]
+]
+[:div {:class "ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" :style "display: block; height: 122px; padding-top: 11px; padding-bottom: 11px; overflow-x: auto; overflow-y: auto; " :role "tabpanel" }
+ [:p "Sed non urna. Donec et ante." ]
+ ]
+ [:h3 {:class "ui-accordion-header ui-helper-reset ui-state-default ui-corner-all" :role "tab" :aria-expanded "false" :aria-selected "false" :tabindex "-1"}
+  [:span {:class "ui-icon ui-icon-triangle-1-e"} ]
+  [:a {:href "#" } "Section 3" ]
+  ]
+[:div {:class "ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" :style "height: 122px; display: none; " :role "tabpanel" }
+ [:p "Nam enim risus, motie et" ]
+ [:ul
+  [:li "List item one"]
+  [:li "List item two"]
+  [:li "List item three"]
+  ]
+ ]
+ ]
+
+;;;;;;
+;;;;;;
+
+[:div {:class "ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" :style "display: block; height: 122px; padding-top: 11px; padding-bottom: 11px; overflow-x: auto; overflow-y: auto; " :role "tabpanel"}
+  [:p 
+         (if-not (nil? result)
+           (doall result))
+   ]
+ ]
+);comment
   [:span
       [:textarea {:id id}
          (if-not (nil? result)
-           (doall result)
-           )
+           (doall result))
        ]
      ;[:div {:onclick "alert(onclick)"} "undo"]
      [:script
