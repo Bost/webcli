@@ -22,27 +22,16 @@
     (include-css "/CodeMirror-2.23/lib/codemirror.css")
     (include-css "/CodeMirror-2.23/theme/lesser-dark.css")
     (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
-    ;(include-css "/css/embed.css")
-    (include-css "/css/noir.css")
-    ;(include-css "/css/gist.css")
-    ;(include-css "https://gist.github.com/stylesheets/gist/embed.css")
-    ;(include-css "/css/reset.css")
-    ;(include-js "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js")
-    ;; following line together with '(include-css "/css/noir.css")' makes the inner frame
+
+    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
+    (include-js "/js/jquery-1.7.2.min.js")
+    (include-js "/js/jquery-ui-1.8.19.custom.min.js")
     [:style {:type "text/css"}
      ".CodeMirror {border: 1px solid #eee; } "
      ;".CodeMirror-scroll { height: auto }"
-     ".CodeMirror-scroll { height: " (/ 100 cmd-nr) " % }"
-     ]
-    [:script
-     "
-     function scrollDown () {
-       var elem = document.getElementById('in-form');
-       elem.scrollTop = elem.scrollHeight;
-     }"
+    ; ".CodeMirror-scroll { height: " (/ 100 cmd-nr) " % }"
      ]
     [:body
-      [:span {:onclick "alert();scrollDown()"} "aaaaaaa"]
       [:div {:id "in-form"}
      content
        ]
@@ -63,14 +52,21 @@
       (.getHostName localhost))
     "$ "))
 
+^{:doc "TODO input validation should be made on controler" }
 (defpartial command-fields [{:keys [ cmd-str cmd-nr]}]
-  "TODO input validation should be made on controler"
   (vali/on-error :cmd-str error-item)
   (label "cmd-str" prompt)
+
+;<input id="autocomplete" style="z-index: 100; position: relative" title="type &quot;a&quot;" class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+
   ;(text-field "cmd-str" "ls -la")
-  (text-field "cmd-str" "pwd")
+  ;[:div
+  (text-field {:class "ui-autocomplete-input"}
+              "cmd-str" "pwd")
+  ; ]
   (label "cmd-nr" "cmd-nr: ")
-  (text-field "cmd-nr" @model/glob-cmd-nr)  ;@glob-cmd-nr is the same as (deref glob-cmd-nr)
+  (text-field {:class "ui-autocomplete-input"}
+    "cmd-nr" @model/glob-cmd-nr)  ;@glob-cmd-nr is the same as (deref glob-cmd-nr)
   )
 
 (defpartial textarea [id result]

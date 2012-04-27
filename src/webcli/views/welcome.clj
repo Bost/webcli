@@ -26,7 +26,9 @@
       ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
-              (submit-button "Execute command" ))
+              (submit-button
+                {:class "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"}
+                             "exec"))
      )
    )
  )
