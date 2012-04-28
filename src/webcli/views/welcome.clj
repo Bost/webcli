@@ -18,7 +18,7 @@
 
 (defpage "/webcli" {:as cmd-str-nr }
  (let [
-       cmd-nr  (model/getnr  cmd-str-nr)
+       cmd-nr (model/getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
     [:div {:id "accordion" }
@@ -27,11 +27,18 @@
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
               (submit-button "exec")
-              (submit-button "reset")
+              )
+     (form-to [:post "/reset"]
+              (submit-button "reset" )
               )
      )
    )
  )
+
+(defpage [:post "/reset"] {:as cmd-str-nr}
+  (model/reset-session)
+  (render "/webcli" cmd-str-nr)
+)
 
 (defpage [:post "/webcli"] {:as cmd-str-nr}
  (if (model/valid? cmd-str-nr)
