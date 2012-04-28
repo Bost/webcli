@@ -4,8 +4,16 @@
     [noir.validation :as vali]
     ))
 
-; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times
+; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times. It contains for example:
+; [("bost-desktop$ pwd\n" "/home/bost/dev/webcli\n") ("bost-desktop$ date\n" "Sat Apr 28 02:46:22 CEST 2012\n")]
 (def session (atom []))
+
+(defn reset-session []
+  "Reset session to its init value"
+  (reset! session []))
+
+(defn add-to-session [cmd-result]
+  (swap! session conj cmd-result))  ; add new command to the list
 
 (import '(java.io BufferedReader InputStreamReader)) 
 
@@ -36,6 +44,7 @@
 (def glob-cmd-nr (atom 1))
 
 (defn getnr [cmd-str-nr]
+  "Gets 3 from {:cmd-str \"pwd\" :cmd-nr 3}"
   (let [ prm-cmd-nr (get cmd-str-nr :cmd-nr) ]
     ;(println "getnr: " cmd-str-nr "; prm-cmd-nr: " prm-cmd-nr)
     (let [ ret-nr (if (nil? prm-cmd-nr)
@@ -49,6 +58,7 @@
   )
 
 (defn getstr [cmd-str-nr]
+  "Gets \"pwd\" from {:cmd-str \"pwd\" :cmd-nr 3}"
   (str (get cmd-str-nr :cmd-str)))
 
 (defn valid? [{:keys [ cmd-str cmd-nr]}]
@@ -62,4 +72,10 @@
 (defn show-session []
   "Print the session on repl"
   (for [c @session] (print (first c))))
+
+(defn get-cmd [result]
+  (doall (first result)))
+
+(defn get-response [result]
+  (doall (rest result)))
 

@@ -21,8 +21,8 @@
        cmd-nr  (model/getnr  cmd-str-nr)
        ]
    (common/layout cmd-nr
-     [:form
-      (map-indexed #(textarea (str "code-" (inc %1)) %2) @model/session)
+    [:div {:id "accordion" }
+      (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
       ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
@@ -37,12 +37,12 @@
  (if (model/valid? cmd-str-nr)
    (let [
          cmd-str (model/getstr cmd-str-nr)
-         result (concat (list (str prompt cmd-str "\n"))
+         cmd-result (concat (list (str prompt cmd-str "\n"))
                         (if (model/valid? cmd-str-nr)
                           (map #(str % "\n") (model/cmd cmd-str)) ; this creates a list of strings
                           ))
          ]
-     (swap! model/session conj result)  ; add new command to the list
+     (model/add-to-session cmd-result)
      )
    )
   (render "/webcli" cmd-str-nr)
