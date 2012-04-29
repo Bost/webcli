@@ -35,7 +35,7 @@
      [:script {:type "text/javascript" } "
 		$(function(){
 			$('#multiOpenAccordion').multiOpenAccordion({
-				active: [1, 2],
+				//active: [1, 2],
 				click: function(event, ui) {
 					//console.log('clicked')
 				},
@@ -49,10 +49,10 @@
 					//console.log('hidden')
 				}
 			});
-			$('#multiOpenAccordion').multiOpenAccordion(\"option\", \"active\", [0, 3]);
+			$('#multiOpenAccordion').multiOpenAccordion(\"option\", \"active\", \"all\");
 		});"
 	]
-                  )
+    )
    )
  )
 
