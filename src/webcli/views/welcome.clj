@@ -21,7 +21,7 @@
        cmd-nr (model/getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
-    [:div {:id "accordion" }
+    [:div {:id "multiOpenAccordion" }
       (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
       ]
      (form-to [:post "/webcli"]
@@ -31,7 +31,28 @@
      (form-to [:post "/reset"]
               (submit-button "reset" )
               )
-     )
+
+     [:script {:type "text/javascript" } "
+		$(function(){
+			$('#multiOpenAccordion').multiOpenAccordion({
+				active: [1, 2],
+				click: function(event, ui) {
+					//console.log('clicked')
+				},
+				init: function(event, ui) {
+					//console.log('whoooooha')
+				},
+				tabShown: function(event, ui) {
+					//console.log('shown')
+				},
+				tabHidden: function(event, ui) {
+					//console.log('hidden')
+				}
+			});
+			$('#multiOpenAccordion').multiOpenAccordion(\"option\", \"active\", [0, 3]);
+		});"
+	]
+                  )
    )
  )
 

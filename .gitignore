@@ -3,6 +3,8 @@
 pom.xml
 *jar
 /lib/
+# ignore any .svn directory
+.svn/
 /classes/
 .lein-deps-sum
 resources/public/cljs/
