@@ -23,9 +23,15 @@
     (include-css "/CodeMirror-2.23/theme/lesser-dark.css")
     (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
 
-    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
-    (include-js "/js/jquery-1.7.2.min.js")
-    (include-js "/js/jquery-ui-1.8.19.custom.min.js")
+;    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
+;    (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
+;    (include-js "/js/jquey-latest/jquery-ui-1.8.19.custom.min.js")
+
+    (include-css "/css/jquery-ui-1.8.9.custom/jquery-ui-1.8.9.custom.css")
+    (include-js "/js/jquery-multi/jquery-1.4.3.min.js")
+    (include-js "/js/jquery-multi/jquery-ui-1.8.13.custom.min.js")
+    (include-js "/js/jquery-multi/jquery.multi-open-accordion-1.5.3.min.js")
+
     (include-js "/js/app.js")
     (include-js "/js/ui_demos.js")
     [:style {:type "text/css"}
@@ -84,15 +90,8 @@
   "                     cmd         response"
   "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
 (defpartial result-area [id result]
-  (let [
-        cmd (model/get-cmd result)
-        response (model/get-response result)
-        ]
-    [:span [:h3 [:a {:href "#"}
-                 cmd
-                 ]]
-     [:div [:p
-            (map #(escape-str %) (vec response))
-            ]]]
-    )
-  )
+   [:h3 [:a {:href "#"} (model/get-cmd result) ]]
+   [:div
+      (map #(escape-str %) (vec (model/get-response result)))
+   ]
+)
