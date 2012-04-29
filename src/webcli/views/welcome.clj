@@ -21,7 +21,10 @@
        cmd-nr (model/getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
-    [:div {:id "accordion" }
+    [:div {:id "accordion" :style "width: 50%"}
+      (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
+      ]
+    [:div {:id "accordion" :style "width: 50%"}
       (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
       ]
      (form-to [:post "/webcli"]
