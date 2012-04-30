@@ -17,13 +17,98 @@
            ))
 
 (defpage "/webcli" {:as cmd-str-nr }
+  (common/layout 1
+[:span
+[:script {:type "text/javascript"} "
+$(\"html\").addClass(\"js\")
+$(function() {
+  $(\"#side\").accordion({initShow : \"#current\"})
+//  $(\"#main\").accordion({
+//      objID: \"#acc1\",
+//      el: \".h\",
+//      head: \"h4, h5\",
+//      next: \"div\",
+//      initShow : \"div.shown\",
+//      standardExpansible : true
+//  })
+  $(\"#main\").accordion({
+      objID: \"#acc2\",
+      obj: \"div\",
+      wrapper: \"div\",
+      el: \".h\",
+      head: \"h4, h5\",
+      next: \"div\",
+      initShow : \"div.shown\",
+      standardExpansible : true
+    })
+//  $(\"#main .accordion\").expandAll({
+//      trigger: \".h\",
+//      ref: \"h4.h\",
+//      cllpsEl : \"div.outer\",
+//      speed: 200,
+//      oneSwitch : false,
+//      instantHide: true
+  })
+//  /* -----------------------
+//  $(\"#side ul.accordion\").expandAll({
+//      trigger: \"li\",
+//      ref: \"\",
+//      cllpsEl : \"ul\",
+//      state : '',
+//      oneSwitch : false
+//  })
+//  ------------------------ */
+  $(\"html\").removeClass(\"js\")
+"]
+
+[:div {:id "wrapper" }
+ [:div {:id "content"}
+  [:div {:id "container"}
+   [:div {:id "main"}
+    [:div {:class "accordion" :id "acc2"}
+
+     [:div {:class "new"}
+      [:h4 {:class "h"}
+       [:a {:class "trigger" :style "display:block" :href "#"}
+        "Heading x3"
+        ]
+       ]
+      [:div {:class "outer" :style "display: none "}
+       [:div {:class "inner shown" }
+        [:p "3. - shown" ]
+        ]
+       ]
+      ]
+
+     [:div {:class "new"}
+      [:h4 {:class "h" }
+       [:a {:class "trigger" :style "display:block" :href "#"}
+        "Heading x4"
+        ]
+       ]
+      [:div {:class "outer" :style "display: none " }
+       [:div {:class "inner shown" }
+        [:p "4. - shown" ]
+        ]
+       ]
+      ]
+     ]
+    ]
+   ]
+  ]
+ ]
+];span
+  )
+)
+
+(defpage "/webcli-old" {:as cmd-str-nr }
  (let [
        cmd-nr (model/getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
     [:div {:id "multiOpenAccordion" :style "width: 50%"}
       (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
-      ]
+    ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
               (submit-button "exec")
@@ -31,27 +116,6 @@
      (form-to [:post "/reset"]
               (submit-button "reset" )
               )
-
-     [:script {:type "text/javascript" } "
-		$(function(){
-			$('#multiOpenAccordion').multiOpenAccordion({
-				//active: [1, 2],
-				click: function(event, ui) {
-					//console.log('clicked')
-				},
-				init: function(event, ui) {
-					//console.log('whoooooha')
-				},
-				tabShown: function(event, ui) {
-					//console.log('shown')
-				},
-				tabHidden: function(event, ui) {
-					//console.log('hidden')
-				}
-			});
-			$('#multiOpenAccordion').multiOpenAccordion(\"option\", \"active\", \"all\");
-		});"
-	]
     )
    )
  )
@@ -65,10 +129,12 @@
  (if (model/valid? cmd-str-nr)
    (let [
          cmd-str (model/getstr cmd-str-nr)
-         cmd-result (concat (list (str prompt cmd-str "\n"))
-                        (if (model/valid? cmd-str-nr)
-                          (map #(str % "\n") (model/cmd cmd-str)) ; this creates a list of strings
-                          ))
+         cmd-result
+            (concat (list (str prompt cmd-str "\n"))
+              (if (model/valid? cmd-str-nr)
+                ; this creates a list of strings
+                (map #(str % "\n") (model/cmd cmd-str))
+                ))
          ]
      (model/add-to-session cmd-result)
      )

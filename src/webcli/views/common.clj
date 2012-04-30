@@ -18,27 +18,33 @@
   (html5
     [:head
      [:title "web command line interface"]]
-    (include-js "/CodeMirror-2.23/lib/codemirror.js")
-    (include-css "/CodeMirror-2.23/lib/codemirror.css")
-    (include-css "/CodeMirror-2.23/theme/lesser-dark.css")
-    (include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
+    ;(include-js "/CodeMirror-2.23/lib/codemirror.js")
+    ;(include-css "/CodeMirror-2.23/lib/codemirror.css")
+    ;(include-css "/CodeMirror-2.23/theme/lesser-dark.css")
+    ;(include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
 
 ;    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
 ;    (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
 ;    (include-js "/js/jquey-latest/jquery-ui-1.8.19.custom.min.js")
 
-    (include-css "/css/jquery-ui-1.8.9.custom/jquery-ui-1.8.9.custom.css")
-    (include-js "/js/jquery-multi/jquery-1.4.3.min.js")
-    (include-js "/js/jquery-multi/jquery-ui-1.8.13.custom.min.js")
-    (include-js "/js/jquery-multi/jquery.multi-open-accordion-1.5.3.min.js")
+;    (include-css "/css/jquery-ui-1.8.9.custom/jquery-ui-1.8.9.custom.css")
+;    (include-js "/js/jquery-multi/jquery-1.4.3.min.js")
+;    (include-js "/js/jquery-multi/jquery-ui-1.8.13.custom.min.js")
+;    (include-js "/js/jquery-multi/jquery.multi-open-accordion-1.5.3.min.js")
 
-    (include-js "/js/app.js")
-    (include-js "/js/ui_demos.js")
-    [:style {:type "text/css"}
-     ".CodeMirror {border: 1px solid #eee; } "
+    (include-css "/css/nested-accordion/nested.css")
+    (include-js "/js/jquery-nested-accordion/ga.js")
+    (include-js "/js/jquery-nested-accordion/jquery.min.js")
+    (include-js "/js/jquery-nested-accordion/jquery.nestedAccordion.js")
+    (include-js "/js/jquery-nested-accordion/expand.js")
+    ;(include-js "/js/app.js")
+    ;(include-js "/js/ui_demos.js")
+    ;[:style {:type "text/css"}
+    ; ".CodeMirror {border: 1px solid #eee; } "
      ;".CodeMirror-scroll { height: auto }"
     ; ".CodeMirror-scroll { height: " (/ 100 cmd-nr) " % }"
-     ]
+    ; ]
+
     [:body
       [:div {:id "in-form"}
      content
@@ -90,7 +96,11 @@
   "                     cmd         response"
   "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
 (defpartial result-area [id result]
-   [:h3 [:a {:href "#"} (model/get-cmd result) ]]
+   [:h2
+      ;[:a {:href "#"}
+         (model/get-cmd result)
+      ;]
+    ]
    [:div
       (map #(escape-str %) (vec (model/get-response result)))
    ]
