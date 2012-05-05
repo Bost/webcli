@@ -76,17 +76,6 @@ $(document).ready(function(){
   [:p.error first-error])
 
 
-(def prompt
-  "TODO move the function for localhost to the model"
-  (str
-    ;uname -n   print the network node hostname
-    ;(read-string (first (cmd "uname -n")))   ; this is bash-specific
-    (let [
-          localhost (java.net.InetAddress/getLocalHost) ; this is universal for JVM; TODO how is it for python-VM
-          ]
-      (.getHostName localhost))
-    "$ "))
-
 ^{:doc "TODO input validation should be made on controler" }
 (defpartial command-fields [{:keys [ cmd-str cmd-nr]}]
   (vali/on-error :cmd-str error-item)

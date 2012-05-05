@@ -14,8 +14,10 @@
   "Reset session to its init value"
   (reset! session []))
 
-(defn add-full-cmd-to-session [cmd-result]
-  (swap! session conj cmd-result))  ; add new command to the list
+(defn add-full-cmd-to-session [text result stats]
+  "At first ignore text and stats"
+    (swap! session conj result)  ; add new command to the list
+  )
 
 (import '(java.io BufferedReader InputStreamReader)) 
 
@@ -95,6 +97,7 @@
 (defn add-to-session [cmd-str-nr]
    (let [
          cmd-str (getstr cmd-str-nr)
+         cmd-stats (str "some stats")
          cmd-result
             (concat (list (str prompt cmd-str "\n"))
               (if (valid? cmd-str-nr)
@@ -102,6 +105,6 @@
                 (map #(str % "\n") (cmd cmd-str))
                 ))
          ]
-     (add-full-cmd-to-session cmd-result)
+     (add-full-cmd-to-session cmd-str cmd-result cmd-stats)
      )
   )
