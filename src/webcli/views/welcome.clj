@@ -16,97 +16,39 @@
            [:div#content]
            ))
 
-(defpage "/webcli" {:as cmd-str-nr }
+(defpage "/webcli-new" {:as cmd-str-nr }
   (common/layout 1
-[:span
-[:script {:type "text/javascript"} "
-$(\"html\").addClass(\"js\")
-$(function() {
-  $(\"#side\").accordion({initShow : \"#current\"})
-//  $(\"#main\").accordion({
-//      objID: \"#acc1\",
-//      el: \".h\",
-//      head: \"h4, h5\",
-//      next: \"div\",
-//      initShow : \"div.shown\",
-//      standardExpansible : true
-//  })
-  $(\"#main\").accordion({
-      objID: \"#acc2\",
-      obj: \"div\",
-      wrapper: \"div\",
-      el: \".h\",
-      head: \"h4, h5\",
-      next: \"div\",
-      initShow : \"div.shown\",
-      standardExpansible : true
-    })
-//  $(\"#main .accordion\").expandAll({
-//      trigger: \".h\",
-//      ref: \"h4.h\",
-//      cllpsEl : \"div.outer\",
-//      speed: 200,
-//      oneSwitch : false,
-//      instantHide: true
-  })
-//  /* -----------------------
-//  $(\"#side ul.accordion\").expandAll({
-//      trigger: \"li\",
-//      ref: \"\",
-//      cllpsEl : \"ul\",
-//      state : '',
-//      oneSwitch : false
-//  })
-//  ------------------------ */
-  $(\"html\").removeClass(\"js\")
-"]
-
-[:div {:id "wrapper" }
- [:div {:id "content"}
-  [:div {:id "container"}
-   [:div {:id "main"}
-    [:div {:class "accordion" :id "acc2"}
-
-     [:div {:class "new"}
-      [:h4 {:class "h"}
-       [:a {:class "trigger" :style "display:block" :href "#"}
-        "Heading x3"
-        ]
-       ]
-      [:div {:class "outer" :style "display: none "}
-       [:div {:class "inner shown" }
-        [:p "3. - shown" ]
-        ]
-       ]
-      ]
-
-     [:div {:class "new"}
-      [:h4 {:class "h" }
-       [:a {:class "trigger" :style "display:block" :href "#"}
-        "Heading x4"
-        ]
-       ]
-      [:div {:class "outer" :style "display: none " }
-       [:div {:class "inner shown" }
-        [:p "4. - shown" ]
-        ]
-       ]
-      ]
-     ]
-    ]
+(comment
+[:ol {:class "message_list" }
+ [:li
+  [:p {:class "message_head"}
+   [:cite "someone:" ]
+   [:span {:class "timestamp"} "1 minute ago" ]
+   ]
+  [:div {:class "message_body"}
+   [:p "hello 1 minute"]
+   ]
+  ]
+ [:li
+  [:p {:class "message_head"}
+   [:cite "someone:" ]
+   [:span {:class "timestamp"} "2 minutes ago" ]
+   ]
+  [:div {:class "message_body"}
+   [:p "hello 2 minutes"]
    ]
   ]
  ]
-];span
+);comment
   )
 )
 
-(defpage "/webcli-old" {:as cmd-str-nr }
+(defpage "/webcli" {:as cmd-str-nr }
  (let [
        cmd-nr (model/getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
-    [:div {:id "multiOpenAccordion" :style "width: 50%"}
+    [:ol {:class "message_list" }
       (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
     ]
      (form-to [:post "/webcli"]

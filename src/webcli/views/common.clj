@@ -17,38 +17,56 @@
   ;(println "layout: cmd-nr" cmd-nr)
   (html5
     [:head
-     [:title "web command line interface"]]
-    ;(include-js "/CodeMirror-2.23/lib/codemirror.js")
-    ;(include-css "/CodeMirror-2.23/lib/codemirror.css")
-    ;(include-css "/CodeMirror-2.23/theme/lesser-dark.css")
-    ;(include-js "/CodeMirror-2.23/mode/javascript/javascript.js")
+     [:title "web command line interface"]
+    (include-css "/css/collapsible-panels/style.css")
+    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
+    (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
+    (include-js "/js/jquery-ui-1.8.19.custom.min.js")
 
-;    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
-;    (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
-;    (include-js "/js/jquey-latest/jquery-ui-1.8.19.custom.min.js")
+[:script {:type "text/javascript"} "
+$(document).ready(function(){
 
-;    (include-css "/css/jquery-ui-1.8.9.custom/jquery-ui-1.8.9.custom.css")
-;    (include-js "/js/jquery-multi/jquery-1.4.3.min.js")
-;    (include-js "/js/jquery-multi/jquery-ui-1.8.13.custom.min.js")
-;    (include-js "/js/jquery-multi/jquery.multi-open-accordion-1.5.3.min.js")
+	//hide message_body after the first one
+	$(\".message_list .message_body:gt(0)\").hide();
 
-    (include-css "/css/nested-accordion/nested.css")
-    (include-js "/js/jquery-nested-accordion/ga.js")
-    (include-js "/js/jquery-nested-accordion/jquery.min.js")
-    (include-js "/js/jquery-nested-accordion/jquery.nestedAccordion.js")
-    (include-js "/js/jquery-nested-accordion/expand.js")
-    ;(include-js "/js/app.js")
-    ;(include-js "/js/ui_demos.js")
-    ;[:style {:type "text/css"}
-    ; ".CodeMirror {border: 1px solid #eee; } "
-     ;".CodeMirror-scroll { height: auto }"
-    ; ".CodeMirror-scroll { height: " (/ 100 cmd-nr) " % }"
-    ; ]
+	//hide message li after the 5th
+	$(\".message_list li:gt(4)\").hide();
+
+
+	//toggle message_body
+	$(\".message_head\").click(function(){
+		$(this).next(\".message_body\").slideToggle(500)
+		return false;
+	});
+
+	//collapse all messages
+	$(\".collpase_all_message\").click(function(){
+		$(\".message_body\").slideUp(500)
+		return false;
+	});
+
+	//show all messages
+	$(\".show_all_message\").click(function(){
+		$(this).hide()
+		$(\".show_recent_only\").show()
+		$(\".message_list li:gt(4)\").slideDown()
+		return false;
+	});
+
+	//show recent messages only
+	$(\".show_recent_only\").click(function(){
+		$(this).hide()
+		$(\".show_all_message\").show()
+		$(\".message_list li:gt(4)\").slideUp()
+		return false;
+	});
+
+});
+"]
+     ];head
 
     [:body
-      [:div {:id "in-form"}
      content
-       ]
        ]))
 
 (defpartial error-item [[first-error]]
@@ -96,12 +114,15 @@
   "                     cmd         response"
   "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
 (defpartial result-area [id result]
-   [:h2
-      ;[:a {:href "#"}
-         (model/get-cmd result)
-      ;]
-    ]
-   [:div
-      (map #(escape-str %) (vec (model/get-response result)))
+ [:li
+  [:p {:class "message_head"}
+   [:cite (model/get-cmd result) ]
+   [:span {:class "timestamp"} "1 minute ago" ]
    ]
+  [:div {:class "message_body"}
+   [:p
+     (map #(escape-str %) (vec (model/get-response result)))
+    ]
+   ]
+  ]
 )
