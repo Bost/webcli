@@ -27,11 +27,10 @@
 $(document).ready(function(){
 
 	//hide message_body after the first one
-	$(\".message_list .message_body:gt(0)\").hide();
+	//$(\".message_list .message_body:gt(0)\").hide();
 
 	//hide message li after the 5th
-	$(\".message_list li:gt(4)\").hide();
-
+	//$(\".message_list li:gt(4)\").hide();
 
 	//toggle message_body
 	$(\".message_head\").click(function(){
@@ -39,7 +38,11 @@ $(document).ready(function(){
 		return false;
 	});
 
-	//collapse all messages
+	$(\".expand_all_message\").click(function(){
+		$(\".message_body\").slideDown()
+		return false;
+	}); 
+
 	$(\".collpase_all_message\").click(function(){
 		$(\".message_body\").slideUp(500)
 		return false;

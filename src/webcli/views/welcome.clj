@@ -48,9 +48,17 @@
        cmd-nr (model/getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
+  [:span
     [:ol {:class "message_list" }
       (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
     ]
+[:p {:class "collapse_buttons" }
+; [:a {:href "#" :class "show_all_message"} "Show all" ]
+; [:a {:href "#" :class "show_recent_only"} "Show 5 only" ]
+ [:a {:href "#" :class "collpase_all_message"} "Collapse all" ]
+ [:a {:href "#" :class "expand_all_message"} "Expand all" ]
+ ]
+   ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
               (submit-button "exec")
