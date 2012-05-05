@@ -1,7 +1,7 @@
 (defproject webcli "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://exampl.com/FIXME"
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
                  [noir-cljs "0.3.0"]
                  [jayq "0.1.0-alpha1"]
                  [fetch "0.1.0-alpha2"]
