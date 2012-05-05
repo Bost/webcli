@@ -16,33 +16,6 @@
            [:div#content]
            ))
 
-(defpage "/webcli-new" {:as cmd-str-nr }
-  (common/layout 1
-(comment
-[:ol {:class "message_list" }
- [:li
-  [:p {:class "message_head"}
-   [:cite "someone:" ]
-   [:span {:class "timestamp"} "1 minute ago" ]
-   ]
-  [:div {:class "message_body"}
-   [:p "hello 1 minute"]
-   ]
-  ]
- [:li
-  [:p {:class "message_head"}
-   [:cite "someone:" ]
-   [:span {:class "timestamp"} "2 minutes ago" ]
-   ]
-  [:div {:class "message_body"}
-   [:p "hello 2 minutes"]
-   ]
-  ]
- ]
-);comment
-  )
-)
-
 (defpage "/webcli" {:as cmd-str-nr }
  (let [
        cmd-nr (model/getnr cmd-str-nr)
@@ -77,19 +50,8 @@
 
 (defpage [:post "/webcli"] {:as cmd-str-nr}
  (if (model/valid? cmd-str-nr)
-   (let [
-         cmd-str (model/getstr cmd-str-nr)
-         cmd-result
-            (concat (list (str prompt cmd-str "\n"))
-              (if (model/valid? cmd-str-nr)
-                ; this creates a list of strings
-                (map #(str % "\n") (model/cmd cmd-str))
-                ))
-         ]
-     (model/add-to-session cmd-result)
+     (model/add-to-session cmd-str-nr)
      )
-   )
   (render "/webcli" cmd-str-nr)
 )
-
 

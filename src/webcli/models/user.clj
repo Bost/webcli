@@ -4,6 +4,8 @@
     [noir.validation :as vali]
     ))
 
+(defrecord Command [text result stats])
+
 ; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times. It contains for example:
 ; [("bost-desktop$ pwd\n" "/home/bost/dev/webcli\n") ("bost-desktop$ date\n" "Sat Apr 28 02:46:22 CEST 2012\n")]
 (def session (atom []))
@@ -12,7 +14,7 @@
   "Reset session to its init value"
   (reset! session []))
 
-(defn add-to-session [cmd-result]
+(defn add-full-cmd-to-session [cmd-result]
   (swap! session conj cmd-result))  ; add new command to the list
 
 (import '(java.io BufferedReader InputStreamReader)) 
@@ -79,3 +81,27 @@
 (defn get-response [result]
   (doall (rest result)))
 
+(def prompt
+  "TODO move the function for localhost to the model"
+  (str
+    ;uname -n   print the network node hostname
+    ;(read-string (first (cmd "uname -n")))   ; this is bash-specific
+    (let [
+          localhost (java.net.InetAddress/getLocalHost) ; this is universal for JVM; TODO how is it for python-VM
+          ]
+      (.getHostName localhost))
+    "$ "))
+
+(defn add-to-session [cmd-str-nr]
+   (let [
+         cmd-str (getstr cmd-str-nr)
+         cmd-result
+            (concat (list (str prompt cmd-str "\n"))
+              (if (valid? cmd-str-nr)
+                ; this creates a list of strings
+                (map #(str % "\n") (cmd cmd-str))
+                ))
+         ]
+     (add-full-cmd-to-session cmd-result)
+     )
+  )
