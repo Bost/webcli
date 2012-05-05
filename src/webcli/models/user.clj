@@ -49,7 +49,7 @@
 
 (defn getnr [cmd-str-nr]
   "Gets 3 from {:cmd-str \"pwd\" :cmd-nr 3}"
-  (let [ prm-cmd-nr (get cmd-str-nr :cmd-nr) ]
+  (let [ prm-cmd-nr (:cmd-nr cmd-str-nr) ]
     ;(println "getnr: " cmd-str-nr "; prm-cmd-nr: " prm-cmd-nr)
     (let [ ret-nr (if (nil? prm-cmd-nr)
                     @glob-cmd-nr ; TODO this should happen only when the page is first time opened
@@ -63,7 +63,7 @@
 
 (defn getstr [cmd-str-nr]
   "Gets \"pwd\" from {:cmd-str \"pwd\" :cmd-nr 3}"
-  (str (get cmd-str-nr :cmd-str)))
+  (:cmd-str cmd-str-nr))
 
 (defn valid? [{:keys [ cmd-str cmd-nr]}]
   ;(vali/rule (vali/has-value? cmd-str)
