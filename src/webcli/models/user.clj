@@ -15,7 +15,7 @@
   (reset! session []))
 
 (defn add-full-cmd-to-session [text result stats]
-  "At first ignore text and stats"
+  "At first ignore the params text and stats"
     (swap! session conj result)  ; add new command to the list
   )
 
@@ -52,7 +52,7 @@
   (let [ prm-cmd-nr (get cmd-str-nr :cmd-nr) ]
     ;(println "getnr: " cmd-str-nr "; prm-cmd-nr: " prm-cmd-nr)
     (let [ ret-nr (if (nil? prm-cmd-nr)
-                    @glob-cmd-nr ; TODO this should happen only when the page is first time openedyy
+                    @glob-cmd-nr ; TODO this should happen only when the page is first time opened
                     prm-cmd-nr   ; this needs to be converted to a number
                     )
           ]
@@ -89,7 +89,8 @@
     ;uname -n   print the network node hostname
     ;(read-string (first (cmd "uname -n")))   ; this is bash-specific
     (let [
-          localhost (java.net.InetAddress/getLocalHost) ; this is universal for JVM; TODO how is it for python-VM
+          ; this is universal for JVM; TODO how is it for python-VM
+          localhost (java.net.InetAddress/getLocalHost)
           ]
       (.getHostName localhost))
     "$ "))

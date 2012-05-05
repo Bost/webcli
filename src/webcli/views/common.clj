@@ -79,7 +79,7 @@ $(document).ready(function(){
 ^{:doc "TODO input validation should be made on controler" }
 (defpartial command-fields [{:keys [ cmd-str cmd-nr]}]
   (vali/on-error :cmd-str error-item)
-  (label "cmd-str" prompt)
+  (label "cmd-str" model/prompt)
 
 ;<input id="autocomplete" style="z-index: 100; position: relative" title="type &quot;a&quot;" class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
 

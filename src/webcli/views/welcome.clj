@@ -11,10 +11,12 @@
     ))
 
 (defpage "/" []
-         (common/layout   ; i.e layout is defined in common.clj - see the (:require ...)
-           ;[:p "Welcome to awsome"]
-           [:div#content]
-           ))
+  ; i.e layout is defined in common.clj - see the (:require ...)
+  (common/layout
+   ;[:p "Welcome to awsome"]
+   [:div#content]
+   )
+)
 
 (defpage "/webcli" {:as cmd-str-nr }
  (let [
