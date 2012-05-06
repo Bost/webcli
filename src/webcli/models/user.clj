@@ -29,6 +29,11 @@
 
 (import '(java.io BufferedReader InputStreamReader)) 
 
+(defn get-exec-time [start-time stop-time]
+  "start/stop-time is in nano seconds"
+  (str "exec time [nano sec]: " (- stop-time start-time))
+  )
+
 (defn exec-cmd [str-cmd]
   (.. Runtime getRuntime (exec str-cmd)))
 
@@ -46,11 +51,14 @@
 (defn cmd [str-cmd]
   ;(println (str "cmd: " str-cmd))
   (let [
+        start-time (System/nanoTime)
         java-lang-process (exec-cmd str-cmd)
+        stop-time (System/nanoTime)
         buff-reader (get-buff-reader java-lang-process)
         ]
-    (line-seq buff-reader))
+    (conj (line-seq buff-reader) (dbg (get-exec-time start-time stop-time)))
   )
+)
 
 ; initial value must be 1
 (def glob-cmd-nr (atom 1))
