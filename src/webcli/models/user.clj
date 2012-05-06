@@ -22,7 +22,7 @@
 (import '(java.io BufferedReader InputStreamReader)) 
 
 (defn exec-cmd [str-cmd]
-  (.. Runtime getRuntime (exec (str str-cmd))))
+  (.. Runtime getRuntime (exec str-cmd)))
 
 ;; URL url = new URL(elem.toString());
 ;; URLConnection con = url.openConnection();
