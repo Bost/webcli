@@ -18,14 +18,32 @@
    )
 )
 
+(defn getnr [cmd-str-nr]
+  "Gets 3 from {:cmd-str \"pwd\" :cmd-nr 3}"
+  (let [ prm-cmd-nr (:cmd-nr cmd-str-nr) ]
+    ;(println "getnr: " cmd-str-nr "; prm-cmd-nr: " prm-cmd-nr)
+    (let [ ret-nr
+          (if (nil? prm-cmd-nr)
+              ; TODO this should happen only when the page is 1st time opened
+              @model/glob-cmd-nr
+              prm-cmd-nr   ; this needs to be converted to a number
+              )
+          ]
+      (read-string (str ret-nr))
+      )
+    )
+  )
+
 (defpage "/webcli" {:as cmd-str-nr }
  (let [
-       cmd-nr (model/getnr cmd-str-nr)
+       cmd-nr (getnr cmd-str-nr)
        ]
    (common/layout cmd-nr
   [:span
     [:ol {:class "message_list" }
-      (map-indexed #(result-area (str "code-" (inc %1)) %2) @model/session)
+      (map-indexed
+        #(result-area (str "code-" (inc %1)) (model/get-result %2))
+        @model/session)
     ]
 [:p {:class "collapse_buttons" }
 ; [:a {:href "#" :class "show_all_message"} "Show all" ]

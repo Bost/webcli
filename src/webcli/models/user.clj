@@ -4,6 +4,13 @@
     [noir.validation :as vali]
     ))
 
+"Print evaluated expression and return its result"
+(defmacro dbg[x]
+  `(let [x# ~x]
+     (println '~x "=" x#) x#
+     )
+  )
+
 (defrecord Command [text result stats])
 
 ; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times. It contains for example:
@@ -16,7 +23,8 @@
 
 (defn add-full-cmd-to-session [text result stats]
   "At first ignore the params text and stats"
-    (swap! session conj result)  ; add new command to the list
+  (def full-cmd (Command. text result stats))
+  (swap! session conj full-cmd)  ; add new full command to the list
   )
 
 (import '(java.io BufferedReader InputStreamReader)) 
@@ -47,24 +55,6 @@
 ; initial value must be 1
 (def glob-cmd-nr (atom 1))
 
-(defn getnr [cmd-str-nr]
-  "Gets 3 from {:cmd-str \"pwd\" :cmd-nr 3}"
-  (let [ prm-cmd-nr (:cmd-nr cmd-str-nr) ]
-    ;(println "getnr: " cmd-str-nr "; prm-cmd-nr: " prm-cmd-nr)
-    (let [ ret-nr (if (nil? prm-cmd-nr)
-                    @glob-cmd-nr ; TODO this should happen only when the page is first time opened
-                    prm-cmd-nr   ; this needs to be converted to a number
-                    )
-          ]
-      (read-string (str ret-nr))
-      )
-    )
-  )
-
-(defn getstr [cmd-str-nr]
-  "Gets \"pwd\" from {:cmd-str \"pwd\" :cmd-nr 3}"
-  (:cmd-str cmd-str-nr))
-
 (defn valid? [{:keys [ cmd-str cmd-nr]}]
   ;(vali/rule (vali/has-value? cmd-str)
   ;           [:cmd-str "The command is empty."])
@@ -83,6 +73,9 @@
 (defn get-response [result]
   (doall (rest result)))
 
+(defn get-result [full-cmd]
+  (:result full-cmd))
+
 (def prompt
   "TODO move the function for localhost to the model"
   (str
@@ -97,7 +90,7 @@
 
 (defn add-to-session [cmd-str-nr]
    (let [
-         cmd-str (getstr cmd-str-nr)
+         cmd-str (:cmd-str cmd-str-nr)
          cmd-stats (str "some stats")
          cmd-result
             (concat (list (str prompt cmd-str "\n"))
