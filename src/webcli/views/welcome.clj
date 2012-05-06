@@ -42,7 +42,7 @@
   [:span
     [:ol {:class "message_list" }
       (map-indexed
-        #(result-area (str "code-" (inc %1)) (model/get-result %2))
+        #(result-area (str "code-" (inc %1)) (model/get-result %2) (model/get-stats %2))
         @model/session)
     ]
 [:p {:class "collapse_buttons" }

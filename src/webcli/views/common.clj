@@ -105,11 +105,11 @@ $(document).ready(function(){
   "Result contains a comand and response to it. I.e."
   "                     cmd         response"
   "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
-(defpartial result-area [id result]
+(defpartial result-area [id result stats]
  [:li
   [:p {:class "message_head"}
    [:cite (model/get-cmd result) ]
-   [:span {:class "timestamp"} "1 minute ago" ]
+   [:span {:class "timestamp"} stats ]
    ]
   [:div {:class "message_body"}
    [:p

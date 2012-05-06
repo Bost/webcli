@@ -31,7 +31,7 @@
 
 (defn get-exec-time [start-time stop-time]
   "start/stop-time is in nano seconds"
-  (str "exec time [nano sec]: " (- stop-time start-time))
+  (str (- stop-time start-time) " [nano sec]")
   )
 
 (defn exec-on-host [str-cmd]
@@ -55,7 +55,7 @@
         stop-time (System/nanoTime)
         buff-reader (get-buff-reader java-lang-process)
         ]
-    (conj (line-seq buff-reader) (dbg (get-exec-time start-time stop-time)))
+    {:result (line-seq buff-reader) :stats (get-exec-time start-time stop-time) }
   )
 )
 
@@ -80,6 +80,9 @@
 (defn get-response [result]
   (doall (rest result)))
 
+(defn get-stats [full-cmd]
+  (:stats full-cmd))
+
 (defn get-result [full-cmd]
   (:result full-cmd))
 
@@ -98,12 +101,13 @@
 (defn add-to-session [cmd-str-nr]
    (let [
          cmd-str (:cmd-str cmd-str-nr)
-         cmd-stats (str "some stats")
+         ret (exec cmd-str)
+         cmd-stats (:stats ret)
          cmd-result
             (concat (list (str prompt cmd-str "\n"))
               (if (valid? cmd-str-nr)
                 ; this creates a list of strings
-                (map #(str % "\n") (exec cmd-str))
+                (map #(str % "\n") (:result ret))
                 ))
          ]
      (add-full-cmd-to-session cmd-str cmd-result cmd-stats)
