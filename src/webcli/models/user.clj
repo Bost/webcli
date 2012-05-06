@@ -29,7 +29,7 @@
 
 (import '(java.io BufferedReader InputStreamReader)) 
 
-(defn exec-cmd [str-cmd]
+(defn exec-on-host [str-cmd]
   (.. Runtime getRuntime (exec str-cmd)))
 
 ;; URL url = new URL(elem.toString());
@@ -43,10 +43,9 @@
       (InputStreamReader. 
         (.getInputStream url-connection))))
 
-(defn cmd [str-cmd]
-  ;(println (str "cmd: " str-cmd))
+(defn exec [str-cmd]
   (let [
-        java-lang-process (exec-cmd str-cmd)
+        java-lang-process (exec-on-host str-cmd)
         buff-reader (get-buff-reader java-lang-process)
         ]
     (line-seq buff-reader))
@@ -80,9 +79,9 @@
   "TODO move the function for localhost to the model"
   (str
     ;uname -n   print the network node hostname
-    ;(read-string (first (cmd "uname -n")))   ; this is bash-specific
+    ;(read-string (first (exec "uname -n")))   ; this is bash-specific
     (let [
-          ; this is universal for JVM; TODO how is it for python-VM
+          ; this is universal for JVM; TODO how is it for python-VM?
           localhost (java.net.InetAddress/getLocalHost)
           ]
       (.getHostName localhost))
@@ -96,7 +95,7 @@
             (concat (list (str prompt cmd-str "\n"))
               (if (valid? cmd-str-nr)
                 ; this creates a list of strings
-                (map #(str % "\n") (cmd cmd-str))
+                (map #(str % "\n") (exec cmd-str))
                 ))
          ]
      (add-full-cmd-to-session cmd-str cmd-result cmd-stats)
