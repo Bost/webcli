@@ -35,7 +35,10 @@
   )
 
 (defn exec-on-host [str-cmd]
-  (.. Runtime getRuntime (exec str-cmd)))
+  (try
+    (.. Runtime getRuntime (exec str-cmd))
+    (catch Exception e (str "caught exception: " (.getMessage e))))
+  )
 
 ;; URL url = new URL(elem.toString());
 ;; URLConnection con = url.openConnection();
