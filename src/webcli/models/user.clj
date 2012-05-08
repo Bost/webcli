@@ -48,10 +48,10 @@
       (InputStreamReader. 
         (.getInputStream url-connection))))
 
-(defn exec-on-host [str-cmd]
+(defn exec-on-host [line]
   (try
     (let [
-          java-lang-process (.. Runtime getRuntime (exec str-cmd))
+          java-lang-process (.. Runtime getRuntime (exec line))
           buff-reader (get-buff-reader java-lang-process)
           ]
       (line-seq buff-reader)
@@ -66,10 +66,10 @@
       (lazy-seq [(.getMessage e)])))
   )
 
-(defn exec [str-cmd]
+(defn exec [line]
   (let [
         start-time (System/nanoTime)
-        result (exec-on-host str-cmd)
+        result (exec-on-host line)
         stop-time (System/nanoTime)
         ]
     {:result result :stats (get-exec-time start-time stop-time) }
