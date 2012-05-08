@@ -4,6 +4,7 @@
     [noir.validation :as vali]
     ))
 
+
 "Print evaluated expression and return its result"
 (defmacro dbg[x]
   `(let [x# ~x]
@@ -27,17 +28,13 @@
   (swap! session conj full-cmd)  ; add new full command to the list
   )
 
-(import '(java.io BufferedReader InputStreamReader)) 
+(import '(java.io BufferedReader InputStreamReader
+                  ;IOException
+                  ))
 
 (defn get-exec-time [start-time stop-time]
   "start/stop-time is in nano seconds"
   (str (- stop-time start-time) " [nano sec]")
-  )
-
-(defn exec-on-host [str-cmd]
-  (try
-    (.. Runtime getRuntime (exec str-cmd))
-    (catch Exception e (str "caught exception: " (.getMessage e))))
   )
 
 ;; URL url = new URL(elem.toString());
@@ -51,16 +48,33 @@
       (InputStreamReader. 
         (.getInputStream url-connection))))
 
+(defn exec-on-host [str-cmd]
+  (try
+    (let [
+          java-lang-process (.. Runtime getRuntime (exec str-cmd))
+          buff-reader (get-buff-reader java-lang-process)
+          ]
+      (line-seq buff-reader)
+      )
+    ;(catch IllegalArgumentException iae
+    ;  (lazy-seq [(str "IllegalArgumentException: " (.getMessage iae))]))
+    ;(catch IOException ioe
+    ;  (lazy-seq [(str "IOException: " (.getMessage ioe))]))
+    ;(catch Exception e
+    ;  (lazy-seq [(str "Exception: " (.getMessage e))]))
+    (catch Exception e
+      (lazy-seq [(.getMessage e)])))
+  )
+
 (defn exec [str-cmd]
   (let [
         start-time (System/nanoTime)
-        java-lang-process (exec-on-host str-cmd)
+        result (exec-on-host str-cmd)
         stop-time (System/nanoTime)
-        buff-reader (get-buff-reader java-lang-process)
         ]
-    {:result (line-seq buff-reader) :stats (get-exec-time start-time stop-time) }
+    {:result result :stats (get-exec-time start-time stop-time) }
+    )
   )
-)
 
 ; initial value must be 1
 (def glob-cmd-nr (atom 1))
