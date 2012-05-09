@@ -43,6 +43,8 @@ $(document).ready(function(){
 		return false;
 	}); 
 
+	$(\"#system-env\").slideToggle(0);
+
 	$(\".collpase_all_message\").click(function(){
 		$(\".message_body\").slideUp(500)
 		return false;
@@ -111,7 +113,7 @@ $(document).ready(function(){
    [:cite (model/get-cmd result) ]
    [:span {:class "timestamp"} stats ]
    ]
-  [:div {:class "message_body"}
+  [:div {:id id :class "message_body"}
    [:p
      (map #(escape-str %) (vec (model/get-response result)))
     ]

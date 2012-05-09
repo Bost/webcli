@@ -10,6 +10,13 @@
     [webcli.views.common]
     ))
 
+"Print evaluated expression and return its result"
+(defmacro dbg[x]
+  `(let [x# ~x]
+     (println '~x "=" x#) x#
+     )
+  )
+
 (defpage "/" []
   ; i.e layout is defined in common.clj - see the (:require ...)
   (common/layout
@@ -40,6 +47,14 @@
        ]
    (common/layout cmd-nr
   [:span
+   [:ol {:class "message_list" }
+    (result-area
+      (:text (model/cmd-env))
+      (:result (model/cmd-env))
+      (:stats (model/cmd-env))
+      )
+    ]
+
     [:ol {:class "message_list" }
       (map-indexed
         #(result-area (str "code-" (inc %1)) (model/get-result %2) (model/get-stats %2))

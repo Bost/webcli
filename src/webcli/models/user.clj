@@ -4,7 +4,6 @@
     [noir.validation :as vali]
     ))
 
-
 "Print evaluated expression and return its result"
 (defmacro dbg[x]
   `(let [x# ~x]
@@ -14,9 +13,20 @@
 
 (defrecord Command [text result stats])
 
+;(System/getenv "HOME")
+(def env (into [] (System/getenv)))
+
+(defn cmd-env []
+  (Command.
+    "system-env"
+    (cons "java: (System/getenv) \n"
+          (map #(str (key %) "=" (val %)"\n") env))
+    "java"))
+
 ; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times. It contains for example:
 ; [("bost-desktop$ pwd\n" "/home/bost/dev/webcli\n") ("bost-desktop$ date\n" "Sat Apr 28 02:46:22 CEST 2012\n")]
 (def session (atom []))
+
 
 (defn reset-session []
   "Reset session to its init value"
@@ -53,8 +63,8 @@
     (let [
           ;java-lang-process (.. Runtime getRuntime (exec line))
           ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "echo $HOME"])))
-          java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "ll"])))
-          ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" line])))
+          ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "ll"])))
+          java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" line])))
 
 ; ProcessBuilder builder = new ProcessBuilder("/bin/bash");
 ; builder.redirectErrorStream(true);
