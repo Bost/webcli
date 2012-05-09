@@ -51,7 +51,16 @@
 (defn exec-on-host [line]
   (try
     (let [
-          java-lang-process (.. Runtime getRuntime (exec line))
+          ;java-lang-process (.. Runtime getRuntime (exec line))
+          ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "echo $HOME"])))
+          java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "ll"])))
+          ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" line])))
+
+; ProcessBuilder builder = new ProcessBuilder("/bin/bash");
+; builder.redirectErrorStream(true);
+; Process process = builder.start();
+;          java-lang-process (.start (.redirectErrorStream (ProcessBuilder. "/bin/bash -c \"pwd\"") true))
+
           buff-reader (get-buff-reader java-lang-process)
           ]
       (line-seq buff-reader)
