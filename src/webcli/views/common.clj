@@ -18,10 +18,14 @@
   (html5
     [:head
      [:title "web command line interface"]
-    (include-css "/css/collapsible-panels/style.css")
-    (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
-    (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
-    (include-js "/js/jquery-ui-1.8.19.custom.min.js")
+     (include-css "/css/collapsible-panels/style.css")
+     (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
+     (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
+     (include-js "/js/jquery-ui-1.8.19.custom.min.js")
+
+     (include-js "/js/terminal/jquery.mousewheel-min.js")
+     (include-js "/js/terminal/jquery.terminal-0.4.15.min.js")
+     (include-css "/css/terminal/jquery.terminal.css")
 
 [:script {:type "text/javascript"} "
 $(document).ready(function(){
@@ -65,7 +69,22 @@ $(document).ready(function(){
 		$(\".message_list li:gt(4)\").slideUp()
 		return false;
 	});
+});
 
+jQuery(function($, undefined) {
+    $('#term_demo').terminal(function(command, term) {
+        if (command !== '') {
+            var result = window.eval(command);
+            if (result != undefined) {
+                term.echo(String(result));
+            }
+        }
+    }, {
+        greetings: 'Javascript Interpreter',
+        name: 'js_demo',
+        height: 200,
+        width: 450,
+        prompt: 'js>'});
 });
 "]
      ];head
