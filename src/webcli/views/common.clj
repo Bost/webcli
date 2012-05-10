@@ -24,7 +24,8 @@
      (include-js "/js/jquery-ui-1.8.19.custom.min.js")
 
      (include-js "/js/terminal/jquery.mousewheel-min.js")
-     (include-js "/js/terminal/jquery.terminal-0.4.15.min.js")
+     ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js") - cannot be include because of the error message color specified at line 1673
+     (include-js "/js/terminal/jquery.terminal-0.4.15.js")
      (include-css "/css/terminal/jquery.terminal.css")
 
 [:script {:type "text/javascript"} "
@@ -83,7 +84,6 @@ jQuery(function($, undefined) {
         greetings: 'Javascript Interpreter',
         name: 'js_demo',
         height: 200,
-        width: 450,
         prompt: 'js>'});
 });
 "]

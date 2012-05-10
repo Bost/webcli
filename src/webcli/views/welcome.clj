@@ -47,7 +47,7 @@
        ]
    (common/layout cmd-nr
   [:span
-   [:div {:id "term_demo"} ]
+   [:div {:id "term_demo" :style "width: 50%" }]
    [:ol {:class "message_list" }
     (result-area
       (:text (model/cmd-env))

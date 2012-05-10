@@ -10,13 +10,20 @@
 .cmd > .clipboard {
     position: fixed;
 }
+.prompt {
+    padding-left: 10px;
+}
+.terminal-output {
+    padding-left:10px;
+    padding-top:10px;
+}
 .terminal {
-    padding: 10px;
+    border-radius: 6px;
+    background: -webkit-gradient(linear, left top, left bottom, from(gray), to(white));
     position: relative;
     overflow: hidden;
 }
 .cmd {
-    padding: 0;
     margin: 0;
     height: 1.3em;
 }
@@ -26,8 +33,6 @@
 .terminal, .terminal .terminal-output, .terminal .terminal-output div,
 .terminal .terminal-output div div, .cmd, .terminal .cmd span, .terminal .cmd div {
     font-family: monospace;
-    color: #aaa;
-    background-color: #000;
     font-size: 12px;
     line-height: 14px;
 }

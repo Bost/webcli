@@ -1669,8 +1669,8 @@ function get_stack(caller) {
                 return draw_line(typeof line == 'function' ? line() : line);
             },
             error: function(message) {
-                //echo red message
-                self.echo('[[;#f00;]' + escape_brackets(message) + ']');
+                //echo black message
+                self.echo('[[;black;]' + escape_brackets(message) + ']');
             },
             scroll: function(amount) {
                 var pos;
