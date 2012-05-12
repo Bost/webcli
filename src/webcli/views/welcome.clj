@@ -47,7 +47,7 @@
        ]
    (common/layout cmd-nr
   [:span
-   [:div {:id "term_demo" :style "width: 50%" }]
+;   [:div {:id "term_demo" :style "width: 50%" }]
    [:ol {:class "message_list" }
     (result-area
       (:text (model/cmd-env))
@@ -67,7 +67,6 @@
  [:a {:href "#" :class "collpase_all_message"} "Collapse all" ]
  [:a {:href "#" :class "expand_all_message"} "Expand all" ]
  ]
-   ]
      (form-to [:post "/webcli"]
               (command-fields cmd-str-nr)
               (submit-button "exec")
@@ -75,6 +74,7 @@
      (form-to [:post "/reset"]
               (submit-button "reset" )
               )
+   ]
     )
    )
  )

@@ -20,15 +20,21 @@
      [:title "web command line interface"]
      (include-css "/css/collapsible-panels/style.css")
      (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
-     (include-js "/js/jquery-latest/jquery-1.7.2.min.js")
-     (include-js "/js/jquery-ui-1.8.19.custom.min.js")
+     ;(include-js "/js/jquery-latest/jquery-1.7.2.min.js")
+     ;(include-js "/js/jquery-latest/jquery-ui-1.8.19.custom.min.js")
 
-     (include-js "/js/terminal/jquery.mousewheel-min.js")
+     ;(include-js "/js/terminal/jquery.mousewheel-min.js")
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js") - cannot be include because of the error message color specified at line 1673
-     (include-js "/js/terminal/jquery.terminal-0.4.15.js")
+     ;(include-js "/js/terminal/jquery.terminal-0.4.15.js")
      (include-css "/css/terminal/jquery.terminal.css")
 
+     (include-js "/js/drag-n-drop/jquery.js")
+     (include-js "/js/drag-n-drop/jqDnR.js")
+     (include-css "/css/drag-n-drop/style.css")
+
+
 [:script {:type "text/javascript"} "
+
 $(document).ready(function(){
 
 	//hide message_body after the first one
@@ -70,8 +76,10 @@ $(document).ready(function(){
 		$(\".message_list li:gt(4)\").slideUp()
 		return false;
 	});
+
 });
 
+/*
 jQuery(function($, undefined) {
     $('#term_demo').terminal(function(command, term) {
         if (command !== '') {
@@ -86,6 +94,7 @@ jQuery(function($, undefined) {
         height: 200,
         prompt: 'js>'});
 });
+*/
 "]
      ];head
 
@@ -132,10 +141,20 @@ jQuery(function($, undefined) {
    [:cite (model/get-cmd result) ]
    [:span {:class "timestamp"} stats ]
    ]
-  [:div {:id id :class "message_body"}
+  [:div {:id id :class "message_body" }
    [:p
+  [:div {:id (str id "-res") :class "jqDnR" }
+  ;"I am an example Box '#ex1' You can *RESIZE* Me."
      (map #(escape-str %) (vec (model/get-response result)))
+  [:div {:class "jqHandle jqResize"} ]
+  ]
     ]
    ]
+  [:div {:class "jqHandle jqResize"} ]
+[:script {:type "text/javascript"} "
+$().ready(function() {
+  $('#" (str id "-res") "').jqResize('.jqResize');
+});
+"]
   ]
 )
