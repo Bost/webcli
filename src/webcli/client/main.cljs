@@ -16,23 +16,27 @@
 ;;************************************************
 
 ;; display that 3 buttons on the bottom right
-;(watcher/init)
+(watcher/init)
 ;;(repl/connect "http://localhost:9000/repl")
 
 ;;************************************************
 ;; Code
 ;;************************************************
 
+
+
+
 (def $body ($ :body))
 (def $content ($ :#content))
 
-(defpartial button [{:keys [label action params]}]
+(defpartial
+  button [{:keys [label action params]}]
   [:div#header
-  [:ul
-   [:li
-    [:a.button {:href "#" :data-action action :data-param param} label]
+   [:ul
+    [:li
+     [:a.button {:href "#" :data-action action :data-param param} label]
+     ]
     ]
-   ]
    ]
   )
 
@@ -41,19 +45,12 @@
 
 (defpartial up-and-running []
   [:p.alert "divide"])
-  ;[:p.alert "CLJS is compiled and active... Time to build something!"])
 
 (append $content
-        (button {:label "play-note-content" :action "play-note" :param "40"})
-        ;([:span "divide these two buttons"])
-        ;(up-and-running)
-        ;(up-and-running)
-        ;(divide)
-        ;(button {:label "play-note-piano" :action "play-note" :param "40"})
+        (button {:label "play-note" :action "play-note" :param "40"})
         )
 
 (delegate $body button :click
   (fn [e]
-    (. -preventDefault -e)
+    (. e -prevendDefault)
     (js/alert "clicked!")))
-

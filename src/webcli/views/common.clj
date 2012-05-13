@@ -26,6 +26,7 @@
      ;(include-js "/js/terminal/jquery.mousewheel-min.js")
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js") - cannot be include because of the error message color specified at line 1673
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.js")
+     ;(include-css "/css/terminal/jquery.terminal.css")
      (include-css "/css/terminal/jquery.terminal.css")
 
      (include-js "/js/drag-n-drop/jquery.js")
@@ -99,8 +100,10 @@ jQuery(function($, undefined) {
      ];head
 
     [:body
+               [:div#wrapper
      content
-       ]))
+       ]
+               (cljs/include-scripts :with-jquery)]))
 
 (defpartial error-item [[first-error]]
   [:p.error first-error])
