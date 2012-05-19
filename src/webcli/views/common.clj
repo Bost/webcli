@@ -18,82 +18,104 @@
   (html5
     [:head
      [:title "web command line interface"]
-     (include-css "/css/collapsible-panels/style.css")
-     (include-css "/css/custom-theme/jquery-ui-1.8.19.custom.css")
-     ;(include-js "/js/jquery-latest/jquery-1.7.2.min.js")
-     ;(include-js "/js/jquery-latest/jquery-ui-1.8.19.custom.min.js")
+     (include-css "/jquery/css/custom-theme/jquery-ui-1.8.20.custom.css")
+     (include-js  "/jquery/js/jquery-1.7.2.min.js")
+     (include-js  "/jquery/js/jquery-ui-1.8.20.custom.min.js")
 
      ;(include-js "/js/terminal/jquery.mousewheel-min.js")
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js") - cannot be include because of the error message color specified at line 1673
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.js")
      ;(include-css "/css/terminal/jquery.terminal.css")
-     (include-css "/css/terminal/jquery.terminal.css")
-
-     (include-js "/js/drag-n-drop/jquery.js")
-     (include-js "/js/drag-n-drop/jqDnR.js")
-     (include-css "/css/drag-n-drop/style.css")
+     ;(include-css "/css/terminal/jquery.terminal.css")
 
 
 [:script {:type "text/javascript"} "
+//$(document).ready(function(){
+	var eMaxIdx = 1;
+	var idPrefix = \"head\";
 
-$(document).ready(function(){
+	function getId(idx) {
+		return \"#\"+idPrefix + idx;
+	}
+	function getIds(maxIdx) {
+		var ids = \"\";
+		for (var i = 0; i < maxIdx; i++) {
+			if (i > 0) {
+				ids += \", \";
+			}
+			ids += getId(i);
+		}
+		return ids+\", headsystem-env\";
+	}
+	var ids = getIds(eMaxIdx);
+	$(function() {
+		function runEffect(divId) {
+			// other effect must be downloaded from jquery theme roller
+			var selectedEffect = \"blind\";
 
-	//hide message_body after the first one
-	//$(\".message_list .message_body:gt(0)\").hide();
+			// most effect types need no options passed by default
+			var options = {};
+			// some effects have required parameters
+			if ( selectedEffect === \"scale\" ) {
+				options = { percent: 0 };
+			} else if ( selectedEffect === \"size\" ) {
+				options = { to: { width: 200, height: 60 } };
+			}
+			//var elem = $( \"#\"+divId +	\" .effect\" );
+			var elem = $(\"#\"+divId).next();
+			elem.toggle( selectedEffect, options, 360 );
+		};
 
-	//hide message li after the 5th
-	//$(\".message_list li:gt(4)\").hide();
-
-	//toggle message_body
-	$(\".message_head\").click(function(){
-		$(this).next(\".message_body\").slideToggle(500)
-		return false;
+		$(ids).click(function() {
+			runEffect(this.id);
+			return false;
+		});
 	});
-
-	$(\".expand_all_message\").click(function(){
-		$(\".message_body\").slideDown()
-		return false;
-	}); 
-
-	$(\"#system-env\").slideToggle(0);
-
-	$(\".collpase_all_message\").click(function(){
-		$(\".message_body\").slideUp(500)
-		return false;
+	$(function() {
+		var el = $(\"#sortable\");
+		//el.sortable();
+		//el.disableSelection();
+		//	$( \".resizable\" ).resizable();
+		//	$( \".draggable\" ).draggable();
 	});
-
-	//show all messages
-	$(\".show_all_message\").click(function(){
-		$(this).hide()
-		$(\".show_recent_only\").show()
-		$(\".message_list li:gt(4)\").slideDown()
-		return false;
+	$(function() {
+		//$( \"input:submit, a, button\", \".buttons\" ).button();
+		//$( \"a\", \".buttons\" ).click(function() { return false; });
 	});
-
-	//show recent messages only
-	$(\".show_recent_only\").click(function(){
-		$(this).hide()
-		$(\".show_all_message\").show()
-		$(\".message_list li:gt(4)\").slideUp()
-		return false;
+	$(function() {
+		$(\"#expand_all\").click(function(){
+			for (var i = 0; i < eMaxIdx; i++) {
+				var accId = getId(i);
+				var elem = $(accId).next();
+				elem.show();
+			}
+			return false;
+		});
+		$(\"#collapse_all\").click(function(){
+			for (var i = 0; i < eMaxIdx; i++) {
+				var accId = getId(i);
+				var elem = $(accId).next();
+				elem.hide();
+			}
+			return false;
+		});
 	});
-
-});
+//});
 
 /*
 jQuery(function($, undefined) {
-    $('#term_demo').terminal(function(command, term) {
-        if (command !== '') {
+    $(\"#term_demo\").terminal(function(command, term) {
+        if (command !== \"\") {
             var result = window.eval(command);
             if (result != undefined) {
                 term.echo(String(result));
             }
         }
     }, {
-        greetings: 'Javascript Interpreter',
-        name: 'js_demo',
+        greetings: \"Javascript Interpreter\",
+        name: \"js_demo\",
         height: 200,
-        prompt: 'js>'});
+        prompt: \"js>\"});
 });
 */
 "]
@@ -113,8 +135,6 @@ jQuery(function($, undefined) {
 (defpartial command-fields [{:keys [ cmd-str cmd-nr]}]
   (vali/on-error :cmd-str error-item)
   (label "cmd-str" model/prompt)
-
-;<input id="autocomplete" style="z-index: 100; position: relative" title="type &quot;a&quot;" class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
 
   ;(text-field "cmd-str" "ls -la")
   ;[:div
@@ -138,26 +158,14 @@ jQuery(function($, undefined) {
   "Result contains a comand and response to it. I.e."
   "                     cmd         response"
   "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
-(defpartial result-area [id result stats]
- [:li
-  [:p {:class "message_head"}
-   [:cite (model/get-cmd result) ]
-   [:span {:class "timestamp"} stats ]
-   ]
-  [:div {:id id :class "message_body" }
-   [:p
-  [:div {:id (str id "-res") :class "jqDnR" }
-  ;"I am an example Box '#ex1' You can *RESIZE* Me."
-     (map #(escape-str %) (vec (model/get-response result)))
-  [:div {:class "jqHandle jqResize"} ]
-  ]
+(defpartial
+  result-area [id result stats]
+  [:li {:id (str "acc" id) :class "acc ui-state-default resizable draggable"}
+   [:span {:class "ui-icon ui-icon-arrowthick-2-n-s"} ]
+   [:div {:id (str "head" id) :class "head ui-widget-header ui-corner-all ui-button-text"}
+    (model/get-cmd result)
+    ;stats
+    ;(map #(escape-str %) (vec (model/get-response result)))
     ]
    ]
-  [:div {:class "jqHandle jqResize"} ]
-[:script {:type "text/javascript"} "
-$().ready(function() {
-  $('#" (str id "-res") "').jqResize('.jqResize');
-});
-"]
-  ]
 )

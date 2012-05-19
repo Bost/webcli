@@ -48,7 +48,7 @@
    (common/layout cmd-nr
   [:span
 ;   [:div {:id "term_demo" :style "width: 50%" }]
-   [:ol {:class "message_list" }
+   [:ul {:id "sortable" :class "ui-sortable" }
     (result-area
       (:text (model/cmd-env))
       (:result (model/cmd-env))
@@ -56,24 +56,22 @@
       )
     ]
 
-    [:ol {:class "message_list" }
-      (map-indexed
-        #(result-area (str "code-" (inc %1)) (model/get-result %2) (model/get-stats %2))
-        @model/session)
-    ]
-[:p {:class "collapse_buttons" }
-; [:a {:href "#" :class "show_all_message"} "Show all" ]
-; [:a {:href "#" :class "show_recent_only"} "Show 5 only" ]
- [:a {:href "#" :class "collpase_all_message"} "Collapse all" ]
- [:a {:href "#" :class "expand_all_message"} "Expand all" ]
- ]
-     (form-to [:post "/webcli"]
-              (command-fields cmd-str-nr)
-              (submit-button "exec")
-              )
-     (form-to [:post "/reset"]
-              (submit-button "reset" )
-              )
+    ;[:ol {:class "message_list" }
+    ;  (map-indexed
+    ;    #(result-area (str "code-" (inc %1)) (model/get-result %2) (model/get-stats %2))
+    ;    @model/session)
+    ;]
+;[:div {:class "collapse_buttons" }
+; [:button "Collapse all" ]
+; [:button "Expand all" ]
+; ]
+;     (form-to [:post "/webcli"]
+;              (command-fields cmd-str-nr)
+;              (submit-button "exec")
+;              )
+;     (form-to [:post "/reset"]
+;              (submit-button "reset" )
+;              )
    ]
     )
    )
