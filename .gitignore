@@ -16,5 +16,5 @@ resources/public/cljs/
 #/.lein-failures
 #/checkouts
 #/.lein-deps-sum
-#/target
+/target/stale/dependencies
 
