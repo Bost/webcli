@@ -42,40 +42,38 @@
   )
 
 (defpage "/webcli" {:as cmd-str-nr }
- (let [
-       cmd-nr (getnr cmd-str-nr)
-       ]
-   (common/layout cmd-nr
-  [:span
-;   [:div {:id "term_demo" :style "width: 50%" }]
-   [:ul {:id "sortable" :class "ui-sortable" }
-    (result-area
-      (:text (model/cmd-env))
-      (:result (model/cmd-env))
-      (:stats (model/cmd-env))
-      )
-    ]
+ (common/layout (getnr cmd-str-nr)
+   [:span
+    [:div {:class "collapse_buttons" }
+     [:button {:id "collapse_all"} "Collapse all" ]
+     [:button {:id "expand_all"} "Expand all" ]
+     ]
+    [:ul {:id "sortable" :class "ui-sortable" }
+     (result-area
+       0
+       (:text (model/cmd-env))
+       (:result (model/cmd-env))
+       (:stats (model/cmd-env))
+       )
 
-    ;[:ol {:class "message_list" }
-    ;  (map-indexed
-    ;    #(result-area (str "code-" (inc %1)) (model/get-result %2) (model/get-stats %2))
-    ;    @model/session)
-    ;]
-;[:div {:class "collapse_buttons" }
-; [:button "Collapse all" ]
-; [:button "Expand all" ]
-; ]
-;     (form-to [:post "/webcli"]
-;              (command-fields cmd-str-nr)
-;              (submit-button "exec")
-;              )
-;     (form-to [:post "/reset"]
-;              (submit-button "reset" )
-;              )
-   ]
-    )
+     (map-indexed
+       ;#(result-area (str "code-" (inc %1)) (model/get-result %2) (model/get-stats %2))
+       #(result-area
+          (inc %1)
+          (model/get-cmd (model/get-result %2))
+          (model/get-result %2) (model/get-stats %2))
+       @model/session)
+     ]
+    (form-to [:post "/webcli"]
+             (command-fields cmd-str-nr)
+             (submit-button "exec")
+             )
+    (form-to [:post "/reset"]
+             (submit-button "reset" )
+             )
+    ]
    )
- )
+  )
 
 (defpage [:post "/reset"] {:as cmd-str-nr}
   (model/reset-session)

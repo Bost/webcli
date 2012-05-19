@@ -11,6 +11,11 @@
     [hiccup.form] ;:only [label text-field]
     )
   )
+(defmacro dbgx[x]
+  `(let [x# ~x]
+     (println '~x "=" x#) x#
+     )
+  )
 
 ; TODO use stucture like this (with html5)
 (defpartial layout [ cmd-nr & content]
@@ -18,20 +23,23 @@
   (html5
     [:head
      [:title "web command line interface"]
-     (include-css "/jquery/css/custom-theme/jquery-ui-1.8.20.custom.css")
      (include-js  "/jquery/js/jquery-1.7.2.min.js")
      (include-js  "/jquery/js/jquery-ui-1.8.20.custom.min.js")
+     (include-css "/jquery/css/custom-theme/jquery-ui-1.8.20.custom.css")
+     (include-css "/css/cheatsheet.css")
 
      ;(include-js "/js/terminal/jquery.mousewheel-min.js")
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js") - cannot be include because of the error message color specified at line 1673
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.js")
      ;(include-css "/css/terminal/jquery.terminal.css")
      ;(include-css "/css/terminal/jquery.terminal.css")
-
-
+     ];head
+    [:body
+     [:div#wrapper
+      content
+      ]
 [:script {:type "text/javascript"} "
-//$(document).ready(function(){
-	var eMaxIdx = 1;
+	var eMaxIdx = 12; // TODO eMaxIdx must be generated dynamically
 	var idPrefix = \"head\";
 
 	function getId(idx) {
@@ -45,7 +53,7 @@
 			}
 			ids += getId(i);
 		}
-		return ids+\", headsystem-env\";
+		return ids;
 	}
 	var ids = getIds(eMaxIdx);
 	$(function() {
@@ -73,8 +81,8 @@
 	});
 	$(function() {
 		var el = $(\"#sortable\");
-		//el.sortable();
-		//el.disableSelection();
+		el.sortable();
+		el.disableSelection();
 		//	$( \".resizable\" ).resizable();
 		//	$( \".draggable\" ).draggable();
 	});
@@ -100,10 +108,8 @@
 			return false;
 		});
 	});
-//});
 
-/*
-jQuery(function($, undefined) {
+/* jQuery(function($, undefined) {
     $(\"#term_demo\").terminal(function(command, term) {
         if (command !== \"\") {
             var result = window.eval(command);
@@ -116,16 +122,10 @@ jQuery(function($, undefined) {
         name: \"js_demo\",
         height: 200,
         prompt: \"js>\"});
-});
-*/
+});*/
 "]
-     ];head
-
-    [:body
-               [:div#wrapper
-     content
-       ]
-               (cljs/include-scripts :with-jquery)]))
+     ;(cljs/include-scripts :with-jquery)
+     ]))
 
 (defpartial error-item [[first-error]]
   [:p.error first-error])
@@ -159,13 +159,14 @@ jQuery(function($, undefined) {
   "                     cmd         response"
   "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
 (defpartial
-  result-area [id result stats]
-  [:li {:id (str "acc" id) :class "acc ui-state-default resizable draggable"}
+  result-area [id text result stats]
+  [:li {:id (str "acc" id) :class "acc ui-corner-all resizable draggable"}
    [:span {:class "ui-icon ui-icon-arrowthick-2-n-s"} ]
    [:div {:id (str "head" id) :class "head ui-widget-header ui-corner-all ui-button-text"}
-    (model/get-cmd result)
-    ;stats
-    ;(map #(escape-str %) (vec (model/get-response result)))
+     text
+    ]
+   [:div {:class "effect ui-corner-all"}
+    (map #(escape-str %) (vec (model/get-response result)))
     ]
    ]
-)
+  )

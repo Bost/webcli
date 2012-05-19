@@ -106,6 +106,10 @@
   (not (vali/errors? :cmd-str :cmd-nr))
   )
 
+(defn show-full-session []
+  "Print the session on repl"
+  (for [c @session] (print c)))
+
 (defn show-session []
   "Print the session on repl"
   (for [c @session] (print (first c))))
