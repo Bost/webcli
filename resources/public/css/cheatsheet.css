@@ -5,6 +5,7 @@ body {
 	font-size: 11px;
 	float: left;
 	color: black;
+	width: 98%;
 }
 
 .buttons {
@@ -53,6 +54,7 @@ body {
 /*	position: relative; */
 	width: 100%;
 	padding: 0.4em 0.4em;
+	word-wrap: break-word;
 }
 .acc {
 	padding-top: 0.4em;
