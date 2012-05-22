@@ -124,7 +124,8 @@
         prompt: \"js>\"});
 });*/
 "]
-     ;(cljs/include-scripts :with-jquery)
+     ;(cljs/include-scripts :with-jquery) ;includes jquery 1.7.1 but I need 1.7.2
+     (cljs/include-scripts)
      ]))
 
 (defpartial error-item [[first-error]]

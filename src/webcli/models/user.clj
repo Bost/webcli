@@ -1,4 +1,4 @@
-^{:doc "This namespace contains business logic"} 
+^{:doc "This namespace contains business logic"}
 (ns webcli.models.user
   (:use
     [noir.validation :as vali]
@@ -23,8 +23,11 @@
           (map #(str (key %) "=" (val %)"\n") env))
     "java"))
 
-; session must be a vector: the order of commands cannot be changed over time, the command can repeat several times. It contains for example:
-; [("bost-desktop$ pwd\n" "/home/bost/dev/webcli\n") ("bost-desktop$ date\n" "Sat Apr 28 02:46:22 CEST 2012\n")]
+;; session must be a vector: the order of commands cannot be changed
+;; over time, the command can repeat several times. It contains for
+;; example:
+;; [("bost-desktop$ pwd\n" "/home/bost/dev/webcli\n")
+;;  ("bost-desktop$ date\n" "Sat Apr 28 02:46:22 CEST 2012\n")]
 (def session (atom []))
 
 
@@ -49,9 +52,11 @@
 
 ;; URL url = new URL(elem.toString());
 ;; URLConnection con = url.openConnection();
-;; BufferedReader rd = new BufferedReader(new InputStreamReader(con.getInputStream(), con.getContentEncoding()));
+;; BufferedReader rd = new BufferedReader(new InputStreamReader(
+;;                    con.getInputStream(), con.getContentEncoding()));
 ;; or try this
-;; BufferedReader rd = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));  
+;; BufferedReader rd = new BufferedReader(new InputStreamReader(
+;;                    con.getInputStream(), "UTF-8"));
 (defn get-buff-reader [url-connection]
   ;(println "Encoding: " (.getContentEncoding url-connection))
   (BufferedReader. 
@@ -61,15 +66,15 @@
 (defn exec-on-host [line]
   (try
     (let [
-          ;java-lang-process (.. Runtime getRuntime (exec line))
-          ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "echo $HOME"])))
-          ;java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" "ll"])))
-          java-lang-process (.. Runtime getRuntime (exec (into-array ["/bin/bash" "-c" line])))
+	  java-lang-process
+	  (.. Runtime getRuntime
+	      (exec (into-array ["/bin/bash" "-c" line])))
 
 ; ProcessBuilder builder = new ProcessBuilder("/bin/bash");
 ; builder.redirectErrorStream(true);
 ; Process process = builder.start();
-;          java-lang-process (.start (.redirectErrorStream (ProcessBuilder. "/bin/bash -c \"pwd\"") true))
+;          java-lang-process (.start (.redirectErrorStream
+	  ;(ProcessBuilder. "/bin/bash -c \"pwd\"") true))
 
           buff-reader (get-buff-reader java-lang-process)
           ]

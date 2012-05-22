@@ -11,5 +11,8 @@
                  [fetch "0.1.0-alpha2"]
                  [crate "0.1.0-alpha3"]
                  [noir "1.3.0-beta2"]]
+  :plugins [
+            [lein-swank "1.4.4"]
+            ]
   :cljsbuild {:builds [{}]}
   :main ^{:skip-aot true} webcli.server)

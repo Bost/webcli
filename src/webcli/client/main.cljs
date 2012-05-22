@@ -23,11 +23,24 @@
 ;; Code
 ;;************************************************
 
-
+"Print evaluated expression and return its result"
+(defmacro dbgs[x]
+  `(let [x# ~x]
+     (println '~x "=" x#) x#
+     )
+  )
 
 
 (def $body ($ :body))
 (def $content ($ :#content))
+
+(def jquery (js* "$"))
+
+(jquery
+   (fn []
+     (-> (jquery "div.meat")
+         (.html "This is a test.")
+         (.append "<div>Look here!</div>"))))
 
 (defpartial
   button [{:keys [label action params]}]
