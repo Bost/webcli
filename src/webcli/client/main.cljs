@@ -23,12 +23,12 @@
 ;; Code
 ;;************************************************
 
-"Print evaluated expression and return its result"
-(defmacro dbgs[x]
-  `(let [x# ~x]
-     (println '~x "=" x#) x#
-     )
-  )
+;"Print evaluated expression and return its result"
+;(defmacro dbgs[x]
+;  `(let [x# ~x]
+;     (println '~x "=" x#) x#
+;     )
+;  )
 
 
 (def $content ($ :#content))
@@ -41,32 +41,46 @@
          (.html "This is a test.")
          (.append "<div>Look here!</div>"))))
 
-(defn goy [idx]
+(defn goyx [idx]
   (js/alert (str "#head" idx "-y")))
 
 (defn getId [idx]
-  (str "#head" idx))
+  ;; TODO this is a kind of macro for javascript - probably not the best approach
+  (js/String. (+ "#head" idx)))
 
-
-(defn doclick []
-   ;(runEffect this.id)
-    ; other effect must be downloaded from jquery theme roller
-  ;(let [
-  ;      selectedEffect"blind"
-  ;      options {}
-   ;     ]
-
-    ; most effect types need no options passed by default
-    ; some effects have required parameters
-    ;if ( selectedEffect === \"scale\" ) {
-    ;    options = { percent: 0 };
-    ;} else if ( selectedEffect === \"size\" ) {
-    ;    options = { to: { width: 200, height: 60 } };
-    ;}
-    ;var elem = $( \"#\"+divId +	\" .effect\" );
-    ;var elem = $(\"#\"+divId).next();
-    ;elem.toggle( selectedEffect, options, 360 );
-  ;  )
-  nil
+(defn doclick [divId]
+  ;; passing {} directly to the toggle function works - strange
+  (let [
+	elem (.next
+	      (jquery (str "#" divId)))
+	]
+    (
+     (.toggle elem "blind" {} 360)
+     )
+    )
   )
 
+
+(defn full-doclick [divId]
+  ;; this method does not work - seems like the {} are interpreted
+  ;; other effect must be downloaded from jquery theme roller
+  (let [
+	selectedEffect "blind"
+	;; most effect types need no options passed by default
+	;; some effects have required parameters
+	options
+	(if (= selectedEffect "scale")
+	  "{ percent: 0 }"
+	  (if (= selectedEffect "size" )
+	    "{ to: { width: 200, height: 60 } }"
+	    "{}"
+	    )
+	  )
+	elem (.next
+	      (jquery (str "#" divId)))
+	]
+    (
+     (.toggle elem selectedEffect options 360)
+     )
+    )
+  )

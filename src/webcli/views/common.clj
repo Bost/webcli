@@ -42,7 +42,7 @@
      ;; I think this includes bootstrap.js, main.js etc
      (cljs/include-scripts)
 [:script {:type "text/javascript"} "
-    var ns = webcli.client.main;
+        var ns = webcli.client.main;
 	var eMaxIdx = 12; // TODO eMaxIdx must be generated dynamically
 	var idPrefix = \"head\";
 
@@ -52,32 +52,19 @@
 			if (i > 0) {
 				ids += \", \";
 			}
-			ids += ns.getId(i);
+                        // valueOf() converts the object String to a real string (chain of letters)
+			ids += ns.getId(i).valueOf();
 		}
 		return ids;
 	}
 	var ids = getIds(eMaxIdx);
 	$(function() {
-		$(ids).click(function() {
-			var divId = this.id;
-			//runEffect(divId);
-			// other effect must be downloaded from jquery theme roller
-			var selectedEffect = \"blind\";
+	    $(ids).click(function() {
+                ns.doclick(this.id);
+                return false;
+            });
+        });
 
-			// most effect types need no options passed by default
-			var options = {};
-			// some effects have required parameters
-			if ( selectedEffect === \"scale\" ) {
-				options = { percent: 0 };
-			} else if ( selectedEffect === \"size\" ) {
-				options = { to: { width: 200, height: 60 } };
-			}
-			//var elem = $( \"#\"+divId +	\" .effect\" );
-			var elem = $(\"#\"+divId).next();
-			elem.toggle( selectedEffect, options, 360 );
-		    return false;
-		});
-	});
 	$(function() {
 		var el = $(\"#sortable\");
 		el.sortable();
@@ -92,7 +79,8 @@
 	$(function() {
 		$(\"#expand_all\").click(function(){
 			for (var i = 0; i < eMaxIdx; i++) {
-				var accId = ns.getId(i);
+                                // valueOf() converts the object String to a real string (chain of letters)
+				var accId = ns.getId(i).valueOf();
 				var elem = $(accId).next();
 				elem.show();
 			}
@@ -100,7 +88,9 @@
 		});
 		$(\"#collapse_all\").click(function(){
 			for (var i = 0; i < eMaxIdx; i++) {
-				var accId = ns.getId(i);
+                                // valueOf() converts the object String to a real string (chain of letters)
+				var accId = ns.getId(i).valueOf();
+				var eAccId = $(accId);
 				var elem = $(accId).next();
 				elem.hide();
 			}
