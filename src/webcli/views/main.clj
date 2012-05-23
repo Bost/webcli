@@ -1,4 +1,4 @@
-(ns webcli.views.welcome
+(ns webcli.views.main
   (:require
     [webcli.views.common :as common]
     [webcli.models.user :as model]
@@ -17,13 +17,13 @@
      )
   )
 
-(defpage "/" []
-  ; i.e layout is defined in common.clj - see the (:require ...)
-  (common/layout
-   ;[:p "Welcome to awsome"]
-   [:div#content]
-   )
-)
+;(defpage "/" []
+;  ; i.e layout is defined in common.clj - see the (:require ...)
+;  (common/layout
+;   ;[:p "Welcome to awsome"]
+;   [:div#content]
+;   )
+;)
 
 (defn getnr [cmd-str-nr]
   "Gets 3 from {:cmd-str \"pwd\" :cmd-nr 3}"
@@ -44,6 +44,8 @@
 (defpage "/webcli" {:as cmd-str-nr }
  (common/layout (getnr cmd-str-nr)
    [:span
+   [:div#content]
+    [:div {:class "meat"} "some text" ]
     [:div {:class "collapse_buttons" }
      [:button {:id "collapse_all"} "Collapse all" ]
      [:button {:id "expand_all"} "Expand all" ]

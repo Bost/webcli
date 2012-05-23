@@ -7,7 +7,7 @@
             [fetch.remotes :as remotes]
             )
   (:use 
-        [jayq.core :only [$ append delegate data]]
+        [jayq.core :only [$ append delegate data css inner]]
         )
   (:use-macros [crate.macros :only [defpartial]]))
 
@@ -31,7 +31,6 @@
   )
 
 
-(def $body ($ :body))
 (def $content ($ :#content))
 
 (def jquery (js* "$"))
@@ -42,28 +41,32 @@
          (.html "This is a test.")
          (.append "<div>Look here!</div>"))))
 
-(defpartial
-  button [{:keys [label action params]}]
-  [:div#header
-   [:ul
-    [:li
-     [:a.button {:href "#" :data-action action :data-param param} label]
-     ]
-    ]
-   ]
+(defn goy [idx]
+  (js/alert (str "#head" idx "-y")))
+
+(defn getId [idx]
+  (str "#head" idx))
+
+
+(defn doclick []
+   ;(runEffect this.id)
+    ; other effect must be downloaded from jquery theme roller
+  ;(let [
+  ;      selectedEffect"blind"
+  ;      options {}
+   ;     ]
+
+    ; most effect types need no options passed by default
+    ; some effects have required parameters
+    ;if ( selectedEffect === \"scale\" ) {
+    ;    options = { percent: 0 };
+    ;} else if ( selectedEffect === \"size\" ) {
+    ;    options = { to: { width: 200, height: 60 } };
+    ;}
+    ;var elem = $( \"#\"+divId +	\" .effect\" );
+    ;var elem = $(\"#\"+divId).next();
+    ;elem.toggle( selectedEffect, options, 360 );
+  ;  )
+  nil
   )
 
-(defpartial divide []
-  [:p.alert "divide"])
-
-(defpartial up-and-running []
-  [:p.alert "divide"])
-
-(append $content
-        (button {:label "play-note" :action "play-note" :param "40"})
-        )
-
-(delegate $body button :click
-  (fn [e]
-    (. e -prevendDefault)
-    (js/alert "clicked!")))

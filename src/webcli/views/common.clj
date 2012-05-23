@@ -38,26 +38,29 @@
      [:div#wrapper
       content
       ]
+     ;(cljs/include-scripts :with-jquery) ;includes jquery 1.7.1 but I need 1.7.2
+     ;; I think this includes bootstrap.js, main.js etc
+     (cljs/include-scripts)
 [:script {:type "text/javascript"} "
+    var ns = webcli.client.main;
 	var eMaxIdx = 12; // TODO eMaxIdx must be generated dynamically
 	var idPrefix = \"head\";
 
-	function getId(idx) {
-		return \"#\"+idPrefix + idx;
-	}
 	function getIds(maxIdx) {
 		var ids = \"\";
 		for (var i = 0; i < maxIdx; i++) {
 			if (i > 0) {
 				ids += \", \";
 			}
-			ids += getId(i);
+			ids += ns.getId(i);
 		}
 		return ids;
 	}
 	var ids = getIds(eMaxIdx);
 	$(function() {
-		function runEffect(divId) {
+		$(ids).click(function() {
+			var divId = this.id;
+			//runEffect(divId);
 			// other effect must be downloaded from jquery theme roller
 			var selectedEffect = \"blind\";
 
@@ -72,11 +75,7 @@
 			//var elem = $( \"#\"+divId +	\" .effect\" );
 			var elem = $(\"#\"+divId).next();
 			elem.toggle( selectedEffect, options, 360 );
-		};
-
-		$(ids).click(function() {
-			runEffect(this.id);
-			return false;
+		    return false;
 		});
 	});
 	$(function() {
@@ -93,7 +92,7 @@
 	$(function() {
 		$(\"#expand_all\").click(function(){
 			for (var i = 0; i < eMaxIdx; i++) {
-				var accId = getId(i);
+				var accId = ns.getId(i);
 				var elem = $(accId).next();
 				elem.show();
 			}
@@ -101,7 +100,7 @@
 		});
 		$(\"#collapse_all\").click(function(){
 			for (var i = 0; i < eMaxIdx; i++) {
-				var accId = getId(i);
+				var accId = ns.getId(i);
 				var elem = $(accId).next();
 				elem.hide();
 			}
@@ -124,8 +123,6 @@
         prompt: \"js>\"});
 });*/
 "]
-     ;(cljs/include-scripts :with-jquery) ;includes jquery 1.7.1 but I need 1.7.2
-     (cljs/include-scripts)
      ]))
 
 (defpartial error-item [[first-error]]
