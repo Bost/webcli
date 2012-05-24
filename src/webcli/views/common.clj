@@ -43,7 +43,7 @@
      (cljs/include-scripts)
 [:script {:type "text/javascript"} "
         var ns = webcli.client.main;
-	var eMaxIdx = 12; // TODO eMaxIdx must be generated dynamically
+	var eMaxIdx = " (inc (.length @model/session)) ";
 	var idPrefix = \"head\";
 
 	function getIds(maxIdx) {
