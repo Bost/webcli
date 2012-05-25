@@ -50,15 +50,45 @@
 
 (defn doclick [divId]
   ;; passing {} directly to the toggle function works - strange
-  (let [
-	elem (.next
-	      (jquery (str "#" divId)))
-	]
+  (let [elem
+	(.next (jquery (str "#" divId)))]
     (
-     (.toggle elem "blind" {} 360)
-     )
-    )
+     (.toggle elem "blind" {} 360))))
+
+
+;; TODO replace collapse [idx] and expand [idx] with do [action idx]
+(defn collapse [idx]
+  ;;(.hide (.next (jquery (str "#head" 0))))
+  (.log js/console "Collapsing element " idx)
+  (-> (jquery (str "#head" idx))
+      (.next)
+      (.hide)
+   )
   )
+
+(defn expand [idx]
+  ;;(.show (.next (jquery (str "#head" 0))))
+  (.log js/console "Epanding element " idx)
+  (-> (jquery (str "#head" idx))
+      (.next)
+      (.show)
+   )
+  )
+
+;; TODO replace collapse-all [n] and expand-all [n] with do-all [action n]
+(defn collapse-all [n]
+  "n is a number of items to collapse; Using (.length @model/sddession) "
+  "gives me a javascript error: Uncaught ReferenceError: webcli is not defined"
+  "passing n as an argument makes this is better anyway"
+  (doseq [i (range n)]
+    (collapse i)))
+
+(defn expand-all [n]
+  "n is a number of items to collapse; Using (.length @model/sddession) "
+  "gives me a javascript error: Uncaught ReferenceError: webcli is not defined"
+  "passing n as an argument makes this is better anyway"
+  (doseq [i (range n)]
+    (expand i)))
 
 
 (defn full-doclick [divId]

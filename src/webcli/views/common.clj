@@ -78,22 +78,11 @@
 	});
 	$(function() {
 		$(\"#expand_all\").click(function(){
-			for (var i = 0; i < eMaxIdx; i++) {
-                                // valueOf() converts the object String to a real string (chain of letters)
-				var accId = ns.getId(i).valueOf();
-				var elem = $(accId).next();
-				elem.show();
-			}
+                        ns.expand_all(eMaxIdx);
 			return false;
 		});
 		$(\"#collapse_all\").click(function(){
-			for (var i = 0; i < eMaxIdx; i++) {
-                                // valueOf() converts the object String to a real string (chain of letters)
-				var accId = ns.getId(i).valueOf();
-				var eAccId = $(accId);
-				var elem = $(accId).next();
-				elem.hide();
-			}
+                        ns.collapse_all(eMaxIdx);
 			return false;
 		});
 	});
