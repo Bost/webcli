@@ -78,11 +78,11 @@
 	});
 	$(function() {
 		$(\"#expand_all\").click(function(){
-                        ns.expand_all(eMaxIdx);
+                        ns.all_elements(ns.expand, eMaxIdx);
 			return false;
 		});
 		$(\"#collapse_all\").click(function(){
-                        ns.collapse_all(eMaxIdx);
+                        ns.all_elements(ns.collapse, eMaxIdx);
 			return false;
 		});
 	});
