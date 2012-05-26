@@ -66,11 +66,7 @@
         ns.simple_bind(ids);
     });
 	$(function() {
-		var el = $(\"#sortable\");
-		el.sortable();
-		el.disableSelection();
-		//	$( \".resizable\" ).resizable();
-		//	$( \".draggable\" ).draggable();
+        ns.set_sortable(\"#sortable\");
 	});
 	$(function() {
 		//$(\"input:submit, a, button\", \".buttons\" ).button();

@@ -45,7 +45,6 @@
  (common/layout (getnr cmd-str-nr)
    [:span
    [:div#content]
-    [:div {:class "meat"} "some text" ]
     [:div {:class "collapse_buttons" }
      [:button {:id "collapse_all"} "Collapse all" ]
      [:button {:id "expand_all"} "Expand all" ]

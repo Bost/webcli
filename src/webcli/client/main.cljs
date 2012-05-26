@@ -35,11 +35,11 @@
 
 (def jquery (js* "$"))
 
-(jquery
-   (fn []
-     (-> (jquery "div.meat")
-         (.html "This is a test.")
-         (.append "<div>Look here!</div>"))))
+;(jquery
+;   (fn []
+;     (-> (jquery "div.meat")
+;         (.html "This is a test.")
+;         (.append "<div>Look here!</div>"))))
 
 (defn getId [idx]
   ;; TODO this is a kind of macro for javascript - probably not
@@ -85,6 +85,17 @@
         )
       )
     ;; TODO not sure if 'return false;' is needed here
+    )
+  )
+
+(defn set-sortable [id]
+  ;(.log js/console "set_sortable: id: " id)
+  (->
+    (jquery id)
+    (.sortable)
+    ;(.disableSelection)  ;; this must be deactivated? Ugh!
+    ;(.resizable) ;; this may apply to $(".resizable")
+    ;(.draggable) ;; this may apply to $(".draggable")
     )
   )
 
