@@ -48,10 +48,11 @@
   ;; TODO this is a kind of macro for javascript - probably not the best approach
   (js/String. (+ "#head" idx)))
 
-(defn doclick [divId]
+(defn doclick [id]
   ;; passing {} directly to the toggle function works - strange
+  (.log js/console "doclick: " id)
   (let [elem
-	(.next (jquery (str "#" divId)))]
+	(.next (jquery (str "#" id)))]
     (
      (.toggle elem "blind" {} 360))))
 
@@ -75,12 +76,51 @@
    )
   )
 
-(defn all-elements [action n]
-  ;;(.log js/console "The action is: " action)
-  (doseq [i (range n)]
-    (action i)))
+(defn bind [selector action n]
+  "Bind a html element specified by the selector with the action which is
+  executed as a click event on n subelements"
+  (->
+    (jquery selector)
+    (.click
+      (fn []
+        ;; (.log js/console "all_elems: action: " action "; n: " n)
+        (doseq [i (range n)]
+          (action i))
+        )
+      )
+    ;; TODO not sure if 'return false;' is needed here
+    )
+  )
 
+(defn fn-doclick [js-event]
+  ;;this cannot be done:
+  ;; (let [target js-event.currentTarget]
+  ;;   (fn [target]
+  ;;    (doclick target.id))
+  ;; )
+  ;; because js-event.currentTarget must be processed by the javascript
+  ;; engine not clojurescript compiler
+  (fn [js-event]
+    ;; (.log js/console "fn_doclick: js-event: " js-event)
+    ;; js-event.currentTarget.id is processed by js engine not cljs
+    (doclick js-event.currentTarget.id)
+    )
+  )
 
+(defn simple-bind [selector id]
+  (->
+    (jquery selector)
+    (.click
+      (fn []
+        ;; (.log js/console "all_elems: action: " action "; n: " n)
+        (fn-doclick id)
+        )
+      )
+    ;; TODO not sure if 'return false;' is needed here
+    )
+  )
+
+(comment
 (defn full-doclick [divId]
   ;; this method does not work - seems like the {} are interpreted
   ;; other effect must be downloaded from jquery theme roller
@@ -104,3 +144,4 @@
      )
     )
   )
+)

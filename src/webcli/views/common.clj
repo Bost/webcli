@@ -29,7 +29,8 @@
      (include-css "/css/cheatsheet.css")
 
      ;(include-js "/js/terminal/jquery.mousewheel-min.js")
-     ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js") - cannot be include because of the error message color specified at line 1673
+     ;; following line cannot be include because of the error message color specified at line 1673
+     ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js")
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.js")
      ;(include-css "/css/terminal/jquery.terminal.css")
      ;(include-css "/css/terminal/jquery.terminal.css")
@@ -42,7 +43,7 @@
      ;; I think this includes bootstrap.js, main.js etc
      (cljs/include-scripts)
 [:script {:type "text/javascript"} "
-        var ns = webcli.client.main;
+    var ns = webcli.client.main;
 	var eMaxIdx = " (inc (.length @model/session)) ";
 	var idPrefix = \"head\";
 
@@ -59,11 +60,12 @@
 	}
 	var ids = getIds(eMaxIdx);
 	$(function() {
-	    $(ids).click(function() {
-                ns.doclick(this.id);
-                return false;
-            });
-        });
+        //ns.simple_bind(ids, this.id);
+	    $(ids).click(
+            // this is js-event
+            ns.fn_doclick(this)
+        );
+    });
 
 	$(function() {
 		var el = $(\"#sortable\");
@@ -77,14 +79,8 @@
 		//$( \"a\", \".buttons\" ).click(function() { return false; });
 	});
 	$(function() {
-		$(\"#expand_all\").click(function(){
-                        ns.all_elements(ns.expand, eMaxIdx);
-			return false;
-		});
-		$(\"#collapse_all\").click(function(){
-                        ns.all_elements(ns.collapse, eMaxIdx);
-			return false;
-		});
+        ns.bind(\"#expand_all\", ns.expand, eMaxIdx);
+        ns.bind(\"#collapse_all\", ns.collapse, eMaxIdx);
 	});
 
 /* jQuery(function($, undefined) {
