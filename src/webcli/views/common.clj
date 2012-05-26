@@ -29,7 +29,8 @@
      (include-css "/css/cheatsheet.css")
 
      ;(include-js "/js/terminal/jquery.mousewheel-min.js")
-     ;; following line cannot be include because of the error message color specified at line 1673
+     ;; following line cannot be include because of the error
+     ;; message color specified at line 1673
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.min.js")
      ;(include-js "/js/terminal/jquery.terminal-0.4.15.js")
      ;(include-css "/css/terminal/jquery.terminal.css")
@@ -39,7 +40,8 @@
      [:div#wrapper
       content
       ]
-     ;(cljs/include-scripts :with-jquery) ;includes jquery 1.7.1 but I need 1.7.2
+     ;; (cljs/include-scripts :with-jquery) ;includes jquery 1.7.1
+     ;; but I need 1.7.2
      ;; I think this includes bootstrap.js, main.js etc
      (cljs/include-scripts)
 [:script {:type "text/javascript"} "
@@ -53,20 +55,16 @@
 			if (i > 0) {
 				ids += \", \";
 			}
-                        // valueOf() converts the object String to a real string (chain of letters)
+            // valueOf() converts the object String to a real
+            // string (chain of letters)
 			ids += ns.getId(i).valueOf();
 		}
 		return ids;
 	}
 	var ids = getIds(eMaxIdx);
 	$(function() {
-        //ns.simple_bind(ids, this.id);
-	    $(ids).click(
-            // this is js-event
-            ns.fn_doclick(this)
-        );
+        ns.simple_bind(ids);
     });
-
 	$(function() {
 		var el = $(\"#sortable\");
 		el.sortable();
@@ -75,8 +73,8 @@
 		//	$( \".draggable\" ).draggable();
 	});
 	$(function() {
-		//$( \"input:submit, a, button\", \".buttons\" ).button();
-		//$( \"a\", \".buttons\" ).click(function() { return false; });
+		//$(\"input:submit, a, button\", \".buttons\" ).button();
+		//$(\"a\", \".buttons\").click(function(){return false;});
 	});
 	$(function() {
         ns.bind(\"#expand_all\", ns.expand, eMaxIdx);
@@ -116,7 +114,8 @@
   ; ]
   (label "cmd-nr" "cmd-nr: ")
   (text-field {:class "ui-autocomplete-input"}
-    "cmd-nr" @model/glob-cmd-nr)  ;@glob-cmd-nr is the same as (deref glob-cmd-nr)
+    ;@glob-cmd-nr is the same as (deref glob-cmd-nr)
+    "cmd-nr" @model/glob-cmd-nr)
   )
 
 (defn escape-str [s0]
@@ -128,9 +127,9 @@
   )
 
 ^{:doc
-  "Result contains a comand and response to it. I.e."
-  "                     cmd         response"
-  "    (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
+  "Result contains a comand and response to it. I.e.
+                       cmd         response
+      (\"bost-desktop$ pwd\n\" \"/home/bost/dev/webcli\n\")" }
 (defpartial
   result-area [id text result stats]
   [:li {:id (str "acc" id) :class "acc ui-corner-all resizable draggable"}

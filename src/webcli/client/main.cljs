@@ -41,11 +41,9 @@
          (.html "This is a test.")
          (.append "<div>Look here!</div>"))))
 
-(defn goyx [idx]
-  (js/alert (str "#head" idx "-y")))
-
 (defn getId [idx]
-  ;; TODO this is a kind of macro for javascript - probably not the best approach
+  ;; TODO this is a kind of macro for javascript - probably not
+  ;; the best approach
   (js/String. (+ "#head" idx)))
 
 (defn doclick [id]
@@ -59,7 +57,6 @@
 
 ;; TODO replace collapse [idx] and expand [idx] with do [action idx]
 (defn collapse [idx]
-  ;;(.hide (.next (jquery (str "#head" 0))))
   ;;(.log js/console "Collapsing element " idx)
   (-> (jquery (str "#head" idx))
       (.next)
@@ -68,8 +65,7 @@
   )
 
 (defn expand [idx]
-  ;;(.show (.next (jquery (str "#head" 0))))
-  ;;(.log js/console "Epanding element " idx)
+  ;(.log js/console "Epanding element " idx)
   (-> (jquery (str "#head" idx))
       (.next)
       (.show)
@@ -77,8 +73,8 @@
   )
 
 (defn bind [selector action n]
-  "Bind a html element specified by the selector with the action which is
-  executed as a click event on n subelements"
+  "Bind a html element specified by the selector with the action
+  which is executed as a click event on n subelements"
   (->
     (jquery selector)
     (.click
@@ -92,31 +88,27 @@
     )
   )
 
-(defn fn-doclick [js-event]
-  ;;this cannot be done:
-  ;; (let [target js-event.currentTarget]
-  ;;   (fn [target]
-  ;;    (doclick target.id))
-  ;; )
-  ;; because js-event.currentTarget must be processed by the javascript
-  ;; engine not clojurescript compiler
-  (fn [js-event]
-    ;; (.log js/console "fn_doclick: js-event: " js-event)
-    ;; js-event.currentTarget.id is processed by js engine not cljs
-    (doclick js-event.currentTarget.id)
-    )
-  )
-
-(defn simple-bind [selector id]
+(defn simple-bind [selector]
   (->
     (jquery selector)
     (.click
-      (fn []
-        ;; (.log js/console "all_elems: action: " action "; n: " n)
-        (fn-doclick id)
+      (this-as me
+        ;(.log js/console
+        ;  "simple_bind: selector: " selector "; this-as: " me)
+        ;;(fn-doclick me)
+        ;;this cannot be done:
+        ;; (let [target me.currentTarget]
+        ;;   (fn [target]
+        ;;    (doclick target.id))
+        ;; )
+        ;; because me.currentTarget must be processed by the
+        ;; javascript engine not clojurescript compiler
+        (fn [me]
+          ;(.log js/console "fn_doclick: me: " me)
+          ;; me.currentTarget.id is processed by js engine not cljs
+          (doclick me.currentTarget.id))
         )
       )
-    ;; TODO not sure if 'return false;' is needed here
     )
   )
 
