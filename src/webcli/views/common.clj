@@ -45,38 +45,8 @@
      ;; I think this includes bootstrap.js, main.js etc
      (cljs/include-scripts)
 [:script {:type "text/javascript"} "
-        var ns = webcli.client.main;
-	var eMaxIdx = " (inc (.length @model/session)) ";
-        ns.maxIdx = eMaxIdx;
-        console.log(\"common.clj: \"+eMaxIdx);
-
-	var idPrefix = \"head\";
-
-	function getIds(maxIdx) {
-		var ids = \"\";
-/*
-		for (var i = 0; i < maxIdx; i++) {
-			if (i > 0) {
-				ids += \", \";
-			}
-            // valueOf() converts the object String to a real
-            // string (chain of letters)
-			ids += ns.getId(i).valueOf();
-		}
-		return ids;
-*/
-        ids = ns.getids(maxIdx - 1);
-        console.log(\"ids: \" + ids);
-		return ids;
-	}
-	var ids = getIds(eMaxIdx);
-	$(function() {
-        ns.simple_bind(ids);
-    });
-	$(function() {
-		//$(\"input:submit, a, button\", \".buttons\" ).button();
-		//$(\"a\", \".buttons\").click(function(){return false;});
-	});
+        webcli.client.main.maxIdx = " (inc (.length @model/session)) ";
+        console.log(\"common.clj: \"+webcli.client.main.maxIdx);
 
 /* jQuery(function($, undefined) {
     $(\"#term_demo\").terminal(function(command, term) {

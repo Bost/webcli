@@ -34,12 +34,6 @@
 
 (def jquery (js* "$"))
 
-;(jquery
-;   (fn []
-;     (-> (jquery "div.meat")
-;         (.html "This is a test.")
-;         (.append "<div>Look here!</div>"))))
-
 (defn getId [idx]
   ;; TODO this is a kind of macro for javascript - probably not
   ;; the best approach
@@ -103,8 +97,8 @@
     (jquery selector)
     (.click
       (this-as me
-        ;(.log js/console
-        ;  "simple_bind: selector: " selector "; this-as: " me)
+        ;;(.log js/console
+        ;;  "simple_bind: selector: " selector "; this-as: " me)
         ;;(fn-doclick me)
         ;;this cannot be done:
         ;; (let [target me.currentTarget]
@@ -123,8 +117,7 @@
   )
 
 (defn getids [m]
-  (str (reduce str (map #(str % ", ") (range m))) m)
-  )
+  (str (reduce str (map #(str "#head" % ", ") (range m))) "#head" m))
 
 (comment
 (defn full-doclick [divId]
@@ -156,8 +149,13 @@
   (fn []
     (set-sortable "#sortable")
     ;; webcli.client.main.maxIdx is specified by common.clj
-    ;(.log js/console "main.cljs: " maxIdx)
+    ;;(.log js/console "main.cljs: " maxIdx)
     (bind "#expand_all", expand, maxIdx)
     (bind "#collapse_all", collapse, maxIdx)
+    ;;$(\"input:submit, a, button\", \".buttons\" ).button();
+    ;;$(\"a\", \".buttons\").click(function(){return false;});
+    (let [ids (getids (- maxIdx 1))]
+      (simple-bind ids)
+      )
     )
   )
