@@ -45,12 +45,16 @@
      ;; I think this includes bootstrap.js, main.js etc
      (cljs/include-scripts)
 [:script {:type "text/javascript"} "
-    var ns = webcli.client.main;
+        var ns = webcli.client.main;
 	var eMaxIdx = " (inc (.length @model/session)) ";
+        ns.maxIdx = eMaxIdx;
+        console.log(\"common.clj: \"+eMaxIdx);
+
 	var idPrefix = \"head\";
 
 	function getIds(maxIdx) {
 		var ids = \"\";
+/*
 		for (var i = 0; i < maxIdx; i++) {
 			if (i > 0) {
 				ids += \", \";
@@ -60,21 +64,18 @@
 			ids += ns.getId(i).valueOf();
 		}
 		return ids;
+*/
+        ids = ns.getids(maxIdx - 1);
+        console.log(\"ids: \" + ids);
+		return ids;
 	}
 	var ids = getIds(eMaxIdx);
 	$(function() {
         ns.simple_bind(ids);
     });
 	$(function() {
-        ns.set_sortable(\"#sortable\");
-	});
-	$(function() {
 		//$(\"input:submit, a, button\", \".buttons\" ).button();
 		//$(\"a\", \".buttons\").click(function(){return false;});
-	});
-	$(function() {
-        ns.bind(\"#expand_all\", ns.expand, eMaxIdx);
-        ns.bind(\"#collapse_all\", ns.collapse, eMaxIdx);
 	});
 
 /* jQuery(function($, undefined) {

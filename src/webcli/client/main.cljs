@@ -30,7 +30,6 @@
 ;     )
 ;  )
 
-
 (def $content ($ :#content))
 
 (def jquery (js* "$"))
@@ -123,6 +122,10 @@
     )
   )
 
+(defn getids [m]
+  (str (reduce str (map #(str % ", ") (range m))) m)
+  )
+
 (comment
 (defn full-doclick [divId]
   ;; this method does not work - seems like the {} are interpreted
@@ -148,3 +151,13 @@
     )
   )
 )
+
+(jquery
+  (fn []
+    (set-sortable "#sortable")
+    ;; webcli.client.main.maxIdx is specified by common.clj
+    ;(.log js/console "main.cljs: " maxIdx)
+    (bind "#expand_all", expand, maxIdx)
+    (bind "#collapse_all", collapse, maxIdx)
+    )
+  )
