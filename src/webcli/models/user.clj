@@ -117,7 +117,7 @@
 
 (defn show-session []
   "Print the session on repl"
-  (for [c @session] (print (first c))))
+  (for [c @session] (println (first c))))
 
 (defn get-cmd [result]
   (doall (first result)))
