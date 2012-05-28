@@ -158,3 +158,7 @@
      (add-full-cmd-to-session cmd-str cmd-result cmd-stats)
      )
   )
+
+;; TODO show file content as a tooltip
+;; TODO show collapsible tree command
+;; TODO automatically recognize commands executed by the user and an offer some context menu, i.e. preview file as a tooltip if 'ls'; collapsible tree for 'tree' etc.
