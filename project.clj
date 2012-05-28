@@ -14,5 +14,6 @@
   :plugins [
             [lein-swank "1.4.4"]
             ]
+;;  :profiles {:dev {:dependencies [[clj-ns-browser "1.2.0"]]}}
   :cljsbuild {:builds [{}]}
   :main ^{:skip-aot true} webcli.server)
