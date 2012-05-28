@@ -157,5 +157,13 @@
     (let [ids (getids (- maxIdx 1))]
       (simple-bind ids)
       )
+    ;; let the last element opened
+    (let [ids (getids (- maxIdx 2))]
+      ;;(.log js/console "collapse all elems: " ids "; maxIdx: " maxIdx)
+      (-> (jquery ids)
+	  (.next)
+          (.hide)
+	  )
+      )
     )
   )
