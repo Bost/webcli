@@ -62,7 +62,9 @@
        #(result-area
           (inc %1)
           (model/get-cmd (model/get-result %2))
-          (model/get-result %2) (model/get-stats %2))
+          (model/get-result %2)
+	  (model/get-stats %2)
+	  )
        @model/session)
      ]
     (form-to [:post "/webcli"]

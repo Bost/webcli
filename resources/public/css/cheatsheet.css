@@ -82,3 +82,7 @@ body {
 	background: #8f9fa8;
 }
 
+.stats {
+    float: right;
+    font-weight: normal;
+}

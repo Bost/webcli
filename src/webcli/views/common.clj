@@ -103,6 +103,7 @@
    [:span {:class "ui-icon ui-icon-arrowthick-2-n-s"} ]
    [:div {:id (str "head" id) :class "head ui-widget-header ui-corner-all ui-button-text"}
      text
+    [:span {:class "stats"} (escape-str stats) ]
     ]
    [:div {:class "effect ui-corner-all"}
     (map #(escape-str %) (vec (model/get-response result)))
