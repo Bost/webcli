@@ -11,17 +11,18 @@
      )
   )
 
-(defrecord Command [text result stats])
+(defrecord Command [text result stats id])
 
 ;(System/getenv "HOME")
 (def env (into [] (System/getenv)))
 
 (defn cmd-env []
   (Command.
-    "system-env"
-    (cons "java: (System/getenv) \n"
-          (map #(str (key %) "=" (val %)"\n") env))
-    "java"))
+   "system-env"
+   (cons "java: (System/getenv) \n"
+	 (map #(str (key %) "=" (val %)"\n") env))
+   "java"
+   0))
 
 ;; session must be a vector: the order of commands cannot be changed
 ;; over time, the command can repeat several times. It contains for
@@ -35,9 +36,9 @@
   "Reset session to its init value"
   (reset! session []))
 
-(defn add-full-cmd-to-session [text result stats]
+(defn add-full-cmd-to-session [text result stats id]
   "At first ignore the params text and stats"
-  (def full-cmd (Command. text result stats))
+  (def full-cmd (Command. text result stats id))
   (swap! session conj full-cmd)  ; add new full command to the list
   )
 
@@ -116,7 +117,7 @@
 
 (defn show-full-session []
   "Print the session on repl"
-  (for [c @session] (print c)))
+  (for [c @session] (println c)))
 
 (defn show-session []
   "Print the session on repl"
@@ -149,6 +150,7 @@
 (defn add-to-session [cmd-str-nr]
    (let [
          cmd-str (:cmd-str cmd-str-nr)
+         cmd-nr (:cmd-nr cmd-str-nr)
          ret (exec cmd-str)
          cmd-stats (:stats ret)
          cmd-result
@@ -159,9 +161,18 @@
                 ))
          ]
      (if (not-nil? ret)
-       (add-full-cmd-to-session cmd-str cmd-result cmd-stats))
+       (add-full-cmd-to-session cmd-str cmd-result cmd-stats cmd-nr))
      )
    )
+
+(defn get-cmd-by-id [cmd-id]
+  (:text
+   (first
+    ;; this returs a list of all commands with given cmd-id
+    ;; (it should be a list with just one item)
+    (filter #(= (str cmd-id) (:id %)) @session))
+   )
+  )
 
 ;; TODO show file content as a tooltip
 ;; TODO show collapsible tree command
