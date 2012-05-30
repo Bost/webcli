@@ -96,9 +96,12 @@
         result (exec-on-host line)
         stop-time (System/nanoTime)
         ]
-    {:result result :stats (get-exec-time start-time stop-time) }
+    (if (not-nil? result)
+      {:result result :stats (get-exec-time start-time stop-time) }
+      )
     )
   )
+
 
 ; initial value must be 1
 (def glob-cmd-nr (atom 1))
@@ -155,9 +158,10 @@
                 (map #(str % "\n") (:result ret))
                 ))
          ]
-     (add-full-cmd-to-session cmd-str cmd-result cmd-stats)
+     (if (not-nil? ret)
+       (add-full-cmd-to-session cmd-str cmd-result cmd-stats))
      )
-  )
+   )
 
 ;; TODO show file content as a tooltip
 ;; TODO show collapsible tree command
