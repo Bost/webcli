@@ -9,6 +9,16 @@ lein deps
 lein run
 ```
 
+## Usage light table:
+
+$ lein light
+
+$ java -jar launcher.jar
+
+(load-file "src/webcli/server.clj")
+(in-ns 'webcli.server)
+(-main)
+
 ## License
 
 Copyright (C) 2012 FIXME
