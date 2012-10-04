@@ -11,13 +11,15 @@ lein run
 
 ## Usage light table:
 
-$ lein light
-
-$ java -jar launcher.jar
-
+```bash
+lein light
+java -jar launcher.jar
+```
+```clojure
 (load-file "src/webcli/server.clj")
 (in-ns 'webcli.server)
 (-main)
+```
 
 ## License
 
